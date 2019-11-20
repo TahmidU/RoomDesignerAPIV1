@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "item_viewed")
+@Table(name = "item_view")
 @Data
 public class ItemView
 {
@@ -25,8 +25,7 @@ public class ItemView
 
     public ItemView(){}
 
-    public ItemView(Date date, Item item) {
+    public ItemView(Date date) {
         this.date = date;
-        this.item = item;
     }
 }

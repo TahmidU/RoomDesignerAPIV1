@@ -1,10 +1,12 @@
 package com.aarrd.room_designer.item.variant;
 
+import com.aarrd.room_designer.item.Item;
 import lombok.Data;
 import org.hibernate.validator.constraints.br.TituloEleitoral;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "item_variant")
@@ -24,10 +26,12 @@ public class ItemVariant
     @Column(name = "date_modified")
     private Date dateModified;
 
+    @OneToMany(mappedBy = "itemVariant")
+    private List<Item> items;
+
     public ItemVariant(){}
 
-    public ItemVariant(long variantId, Date dateCreated, Date dateModified) {
-        this.variantId = variantId;
+    public ItemVariant(Date dateCreated, Date dateModified) {
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
     }

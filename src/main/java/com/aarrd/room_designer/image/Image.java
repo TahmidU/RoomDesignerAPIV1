@@ -20,7 +20,7 @@ public class Image
     @Column(name = "upload_date")
     private Date uploadDate;
 
-    @Column(name = "image_directory")
+    @Column(name = "image_directory", unique = true)
     private String imageDirectory;
 
     @ManyToOne
@@ -29,10 +29,8 @@ public class Image
 
     public Image(){}
 
-    public Image(long imageId, Date uploadDate, String imageDirectory, Item item) {
-        this.imageId = imageId;
+    public Image(Date uploadDate, String imageDirectory) {
         this.uploadDate = uploadDate;
         this.imageDirectory = imageDirectory;
-        this.item = item;
     }
 }

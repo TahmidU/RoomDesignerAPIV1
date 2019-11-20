@@ -1,15 +1,19 @@
 package com.aarrd.room_designer.item;
 
+import com.aarrd.room_designer.favourite.Favourite;
 import com.aarrd.room_designer.image.Image;
 import com.aarrd.room_designer.item.category.Category;
 import com.aarrd.room_designer.item.statistic.downlaod.ItemDownload;
 import com.aarrd.room_designer.item.statistic.view.ItemView;
 import com.aarrd.room_designer.item.tag.Tag;
+import com.aarrd.room_designer.item.type.Type;
 import com.aarrd.room_designer.item.variant.ItemVariant;
+import com.aarrd.room_designer.model.Model;
 import com.aarrd.room_designer.user.User;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "item")
@@ -28,36 +32,35 @@ public class Item
     private String desc;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "cat_id", referencedColumnName = "cat_id")
+    @JoinColumn(name = "cat_id")
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "variant_id", referencedColumnName = "variant_id")
+    @JoinColumn(name = "variant_id")
     private ItemVariant itemVariant;
 
     @ManyToOne
-    @JoinColumn(name = "type_id", referencedColumnName = "type_id")
-    private long type_id;
+    @JoinColumn(name = "type_id")
+    private Type type;
 
     @OneToMany(mappedBy = "item")
-    @JoinColumn(name = "image_id", referencedColumnName = "image_id")
-    private Image image;
+    private List<Image> images;
 
     @OneToMany(mappedBy = "item")
-    @JoinColumn(name = "tag_id", referencedColumnName = "tag_id")
-    private Tag tag;
+    private List<Tag> tags;
 
     @OneToMany(mappedBy = "item")
-    @JoinColumn(name = "item_id")
-    private ItemDownload itemDownload;
+    private List<ItemDownload> itemDownloads;
 
     @OneToMany(mappedBy = "item")
-    @JoinColumn(name = "item_id")
-    private ItemView itemView;
+    private List<ItemView> itemViews;
+
+    @OneToMany(mappedBy = "item")
+    private List<Favourite> favourites;
 
     public Item(){}
 

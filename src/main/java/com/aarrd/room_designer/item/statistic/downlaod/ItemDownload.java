@@ -27,9 +27,7 @@ public class ItemDownload
 
     public ItemDownload(){}
 
-    public ItemDownload(long downloadId, Date date, Item item) {
-        this.downloadId = downloadId;
+    public ItemDownload(Date date) {
         this.date = date;
-        this.item = item;
     }
 }

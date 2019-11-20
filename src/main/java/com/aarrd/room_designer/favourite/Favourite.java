@@ -22,18 +22,16 @@ public class Favourite
     private Date favouriteDate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "item_id", referencedColumnName = "item_id")
+    @JoinColumn(name = "item_id")
     private Item item;
 
     public Favourite(){}
 
-    public Favourite(Date favouriteDate, User user, Item item) {
+    public Favourite(Date favouriteDate) {
         this.favouriteDate = favouriteDate;
-        this.user = user;
-        this.item = item;
     }
 }

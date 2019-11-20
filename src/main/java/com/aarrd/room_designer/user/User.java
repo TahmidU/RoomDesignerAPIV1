@@ -1,10 +1,10 @@
 package com.aarrd.room_designer.user;
 
+import com.aarrd.room_designer.favourite.Favourite;
 import com.aarrd.room_designer.item.Item;
 import lombok.Data;
-
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -29,8 +29,10 @@ public class User
     private String phoneNum;
 
     @OneToMany(mappedBy = "user")
-    @JoinColumn(name = "user_id")
-    private Set<Item> items;
+    private List<Item> items;
+
+    @OneToMany(mappedBy = "user")
+    private List<Favourite> favourites;
 
     public User() {
     }
