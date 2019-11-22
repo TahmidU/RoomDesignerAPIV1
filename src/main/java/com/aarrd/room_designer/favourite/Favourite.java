@@ -14,19 +14,19 @@ public class Favourite
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "favourite_id")
-    private long favouriteId;
+    @Column(name = "favourite_id", nullable = false)
+    private Long favouriteId;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "favourited_date",nullable = false)
+    @Column(name = "favourited_date", nullable = false)
     private Date favouriteDate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     public Favourite(){}

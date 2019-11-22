@@ -14,15 +14,15 @@ public class ItemDownload
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "download_id")
-    private long downloadId;
+    @Column(name = "download_id", nullable = false)
+    private Long downloadId;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     private Date date;
 
     @ManyToOne
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     public ItemDownload(){}

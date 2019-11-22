@@ -14,7 +14,7 @@ public class User
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id",nullable = false)
-    private long userId;
+    private Long userId;
 
     @Column(name = "first_name",nullable = false)
     private String firstName;
@@ -22,7 +22,10 @@ public class User
     @Column(name = "last_name",nullable = false)
     private String lastName;
 
-    @Column(name = "email",nullable = false)
+    @Column(name = "password", nullable = false, length = 20)
+    private String password;
+
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "phone_num",unique = true, length = 11)
@@ -37,9 +40,10 @@ public class User
     public User() {
     }
 
-    public User(String firstName, String lastName, String email, String phoneNum) {
+    public User(String firstName, String lastName, String password, String email, String phoneNum) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.password = password;
         this.email = email;
         this.phoneNum = phoneNum;
     }

@@ -13,10 +13,10 @@ public class Category
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cat_id")
-    private long cat_id;
+    @Column(name = "cat_id", nullable = false)
+    private Long cat_id;
 
-    @Column(name = "cat_name", unique = true)
+    @Column(name = "cat_name", unique = true, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "category")

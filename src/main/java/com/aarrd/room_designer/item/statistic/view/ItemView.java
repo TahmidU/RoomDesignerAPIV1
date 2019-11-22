@@ -12,15 +12,15 @@ public class ItemView
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "view_id")
-    private long viewId;
+    @Column(name = "view_id", nullable = false)
+    private Long viewId;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     private Date date;
 
     @ManyToOne
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     public ItemView(){}

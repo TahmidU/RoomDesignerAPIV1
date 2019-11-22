@@ -13,18 +13,18 @@ public class Image
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "image_id")
-    private long imageId;
+    @Column(name = "image_id", nullable = false)
+    private Long imageId;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "upload_date")
+    @Column(name = "upload_date", nullable = false)
     private Date uploadDate;
 
-    @Column(name = "image_directory", unique = true)
+    @Column(name = "image_directory", unique = true, nullable = false)
     private String imageDirectory;
 
     @ManyToOne
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     public Image(){}

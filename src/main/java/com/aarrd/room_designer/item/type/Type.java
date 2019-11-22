@@ -13,10 +13,10 @@ public class Type
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "type_id")
-    private long typeId;
+    @Column(name = "type_id", nullable = false)
+    private Long typeId;
 
-    @Column(name = "type_name", unique = true)
+    @Column(name = "type_name", unique = true, nullable = false)
     private String typeName;
 
     @OneToMany(mappedBy = "type")

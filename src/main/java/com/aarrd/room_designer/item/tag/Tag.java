@@ -12,14 +12,14 @@ public class Tag
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tag_id")
-    private long tagId;
+    @Column(name = "tag_id", nullable = false)
+    private Long tagId;
 
-    @Column(name = "tag_name")
+    @Column(name = "tag_name", nullable = false)
     private String tagName;
 
     @ManyToOne
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     public Tag(){}

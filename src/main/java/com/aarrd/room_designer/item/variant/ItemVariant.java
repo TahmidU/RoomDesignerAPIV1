@@ -15,15 +15,15 @@ public class ItemVariant
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "variant_id")
-    private long variantId;
+    @Column(name = "variant_id", nullable = false)
+    private Long variantId;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "date_created")
+    @Column(name = "date_created", nullable = false)
     private Date dateCreated;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "date_modified")
+    @Column(name = "date_modified", nullable = false)
     private Date dateModified;
 
     @OneToMany(mappedBy = "itemVariant")

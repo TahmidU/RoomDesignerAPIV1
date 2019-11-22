@@ -22,8 +22,8 @@ public class Item
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
-    private long itemId;
+    @Column(name = "item_id", nullable = false)
+    private Long itemId;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -32,19 +32,19 @@ public class Item
     private String desc;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "cat_id")
+    @JoinColumn(name = "cat_id", nullable = false)
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "variant_id")
+    @JoinColumn(name = "variant_id", nullable = false)
     private ItemVariant itemVariant;
 
     @ManyToOne
-    @JoinColumn(name = "type_id")
+    @JoinColumn(name = "type_id", nullable = false)
     private Type type;
 
     @OneToMany(mappedBy = "item")

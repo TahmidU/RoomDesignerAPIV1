@@ -12,14 +12,14 @@ public class Model
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "model_id")
-    private long modelId;
+    @Column(name = "model_id", nullable = false)
+    private Long modelId;
 
-    @Column(name = "model_directory", unique = true)
+    @Column(name = "model_directory", unique = true, nullable = false)
     private String modelDirectory;
 
     @OneToOne
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     public Model(){}
