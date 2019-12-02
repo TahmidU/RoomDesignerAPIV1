@@ -2,7 +2,10 @@ package com.aarrd.room_designer.user;
 
 import com.aarrd.room_designer.favourite.Favourite;
 import com.aarrd.room_designer.item.Item;
+import com.aarrd.room_designer.user.security.vertification.VerificationToken;
 import lombok.Data;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -31,20 +34,28 @@ public class User
     @Column(name = "phone_num",unique = true, length = 11)
     private String phoneNum;
 
+    @Column(name = "active", nullable = false, columnDefinition = "BIT", length = 1)
+    private Boolean active;
+
     @OneToMany(mappedBy = "user")
     private List<Item> items;
 
     @OneToMany(mappedBy = "user")
     private List<Favourite> favourites;
 
+    @OneToMany(mappedBy = "user")
+    private List<VerificationToken> verificationTokens;
+
     public User() {
     }
 
-    public User(String firstName, String lastName, String password, String email, String phoneNum) {
+    public User(String firstName, String lastName, String password, String email, String phoneNum, Boolean active) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
         this.phoneNum = phoneNum;
+        this.active = active;
     }
+
 }

@@ -1,33 +1,36 @@
 package com.aarrd.room_designer.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/user")
 public class UserController
 {
-    private UserRepository userRepository;
+    @Autowired
+    private IUserRepository IUserRepository;
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserController(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder)
+    @PutMapping(value = "/change-details", produces = "application/json")
+    public HttpStatus changeDetails(Principal principal, @RequestBody UserDetail userDetail)
     {
-        this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
+        User user = IUserRepository.findByEmail(principal.getName());
+        if (user != null)
+        {
+            user.setFirstName(userDetail.getFirstName());
+            user.setLastName(userDetail.getLastName());
+            user.setPassword(bCryptPasswordEncoder.encode(userDetail.getPassword()));
+            user.setPhoneNum(userDetail.getPhoneNum());
 
-    @PostMapping("/sign-up")
-    public void signUp(@RequestBody User user)
-    {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-    }
+            IUserRepository.save(user);
+            return HttpStatus.OK;
+        }
 
-    @GetMapping("/test")
-    public String getPhoneNumber(@RequestParam(value = "email") String email)
-    {
-        return userRepository.findByEmail(email).getPhoneNum();
+        return HttpStatus.UNAUTHORIZED;
     }
 }
