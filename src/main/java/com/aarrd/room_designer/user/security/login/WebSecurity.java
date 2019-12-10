@@ -28,10 +28,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter
                 .authorizeRequests()
                 .antMatchers(SIGN_UP_URL).permitAll()
                 .antMatchers("/sign-up/confirmation").permitAll()
+                .antMatchers("/user/user-stat").permitAll()
+                .antMatchers("/images/upload").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()));
+
+        //http.exceptionHandling().accessDeniedPage("user/user-stat");
     }
 
     @Override
