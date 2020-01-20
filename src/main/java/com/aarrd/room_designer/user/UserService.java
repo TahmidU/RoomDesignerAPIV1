@@ -3,7 +3,6 @@ package com.aarrd.room_designer.user;
 import com.aarrd.room_designer.user.security.sign_up.UserLoginDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +39,11 @@ public class UserService
             return HttpStatus.OK;
         }
         return HttpStatus.CONFLICT;
+    }
+
+    public Long getID(String email)
+    {
+        return userRepository.findByEmail(email).getUserId();
     }
 
 }

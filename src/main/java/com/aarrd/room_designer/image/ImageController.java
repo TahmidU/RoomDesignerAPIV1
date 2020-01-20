@@ -2,6 +2,7 @@ package com.aarrd.room_designer.image;
 
 import com.aarrd.room_designer.storage.StorageFileNotFoundException;
 import com.aarrd.room_designer.storage.StorageService;
+import com.aarrd.room_designer.storage.StorageTypeFlag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.core.io.Resource;
@@ -14,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.EnumSet;
 
 @RestController
 @RequestMapping(value = "/images")
@@ -36,9 +39,9 @@ public class ImageController
     }*/
 
     @PostMapping("/upload")
-    public HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file)
+    public HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file, Principal principal)
     {
-        storageService.store(file);
+        storageService.store(file, principal, EnumSet.of(StorageTypeFlag.IMAGE));
         return HttpStatus.CREATED;
     }
 
