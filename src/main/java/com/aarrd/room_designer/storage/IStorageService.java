@@ -9,12 +9,11 @@ import java.security.Principal;
 import java.util.EnumSet;
 import java.util.stream.Stream;
 
-public interface StorageService
+public interface IStorageService
 {
     void init();
-    void store(MultipartFile file, Principal principle, EnumSet<StorageTypeFlag> flags);
+    void store(MultipartFile file, Long Id, EnumSet<StorageTypeFlag> flags);
     Stream<Path> loadAll();
-    Path load(String filename);
-    Resource loadAsResource(String filename);
-    void deleteAll();
+    Resource loadAsResource(String path);
+    void delete(String path);
 }

@@ -2,7 +2,6 @@ package com.aarrd.room_designer.image;
 
 import com.aarrd.room_designer.item.Item;
 import lombok.Data;
-
 import javax.persistence.*;
 import java.util.Date;
 

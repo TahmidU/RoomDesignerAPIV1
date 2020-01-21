@@ -7,5 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 public class StorageProperties
 {
-    private String location = "data";
+    private String ROOT_LOCATION = "data";
+    private String IMAGE = "images\\";
+    private String MODEL = "models\\";
 }

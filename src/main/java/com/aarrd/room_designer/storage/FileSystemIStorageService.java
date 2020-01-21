@@ -1,12 +1,12 @@
 package com.aarrd.room_designer.storage;
 
 import com.aarrd.room_designer.user.UserService;
-import org.apache.tomcat.jni.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,21 +19,18 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Service
-public class FileSystemStorageService implements StorageService
+public class FileSystemIStorageService implements IStorageService
 {
     private final Path ROOT_LOCATION;
-    private final String IMAGE = "images\\";
-    private final String MODEL = "models\\";
-
-    private UserService userService;
-
-    private ArrayList<String> permissibleTypes;
+    private final String IMAGE;
+    private final String MODEL;
 
     @Autowired
-    public FileSystemStorageService(StorageProperties properties, UserService userService, ArrayList<String> permissibleTypes) {
-        this.ROOT_LOCATION = Paths.get(properties.getLocation());
-        this.userService = userService;
-        this.permissibleTypes = permissibleTypes;
+    public FileSystemIStorageService(StorageProperties properties)
+    {
+        this.ROOT_LOCATION = Paths.get(properties.getROOT_LOCATION());
+        this.IMAGE = properties.getIMAGE();
+        this.MODEL = properties.getMODEL();
     }
 
     @Override
@@ -49,20 +46,9 @@ public class FileSystemStorageService implements StorageService
     }
 
     @Override
-    public void store(MultipartFile file, Principal principal, EnumSet<StorageTypeFlag> flags)
+    public void store(MultipartFile file, Long Id, EnumSet<StorageTypeFlag> flags)
     {
-        String location = ROOT_LOCATION.toString() + "\\" + userService.getID(principal.getName());
-
-        //Check if the file has a permissible content type.
-        System.out.println("FileSystemStorageService :: Uploading file type: " + file.getContentType());
-        boolean typeFound = false;
-        for(int i = 0; i < permissibleTypes.size(); i++)
-        {
-            if(permissibleTypes.get(i).equals(file.getContentType()))
-                typeFound = true;
-        }
-        if(!typeFound)
-            throw new StorageException("File is not an acceptable type: " + file.getOriginalFilename());
+        String location = ROOT_LOCATION.toString() + "\\" + Id;
 
         //Check which flag is set.
         if(flags.contains(StorageTypeFlag.IMAGE))
@@ -107,30 +93,34 @@ public class FileSystemStorageService implements StorageService
     }
 
     @Override
-    public Path load(String filename) {
-        return ROOT_LOCATION.resolve(filename);
-    }
-
-    @Override
-    public Resource loadAsResource(String filename) {
+    public Resource loadAsResource(String path) {
         try
         {
-            Path file = load(filename);
+            Path file = Paths.get(path);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable())
                 return resource;
             else
-                throw new StorageFileNotFoundException("Could not read file: " + filename);
+                throw new StorageFileNotFoundException("Could not read file: " + path);
 
         }catch (MalformedURLException e)
         {
-            throw new StorageFileNotFoundException("Could not read file " + filename, e);
+            throw new StorageFileNotFoundException("Could not read file " + path, e);
         }
     }
 
     @Override
-    public void deleteAll()
+    public void delete(String path)
     {
-        FileSystemUtils.deleteRecursively(ROOT_LOCATION.toFile());
+        Path filePath = Paths.get(path);
+        if(Files.exists(filePath)) {
+            try {
+                Files.delete(Paths.get(path));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+            throw new StorageException("Deletion failed. File "+path+" does not exist.");
     }
 }

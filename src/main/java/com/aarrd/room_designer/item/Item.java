@@ -5,10 +5,8 @@ import com.aarrd.room_designer.image.Image;
 import com.aarrd.room_designer.item.category.Category;
 import com.aarrd.room_designer.item.statistic.downlaod.ItemDownload;
 import com.aarrd.room_designer.item.statistic.view.ItemView;
-import com.aarrd.room_designer.item.tag.Tag;
 import com.aarrd.room_designer.item.type.Type;
 import com.aarrd.room_designer.item.variant.ItemVariant;
-import com.aarrd.room_designer.model.Model;
 import com.aarrd.room_designer.user.User;
 import lombok.Data;
 
@@ -49,9 +47,6 @@ public class Item
 
     @OneToMany(mappedBy = "item")
     private List<Image> images;
-
-    @OneToMany(mappedBy = "item")
-    private List<Tag> tags;
 
     @OneToMany(mappedBy = "item")
     private List<ItemDownload> itemDownloads;
