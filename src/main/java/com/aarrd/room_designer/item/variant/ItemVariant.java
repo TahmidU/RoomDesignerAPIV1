@@ -18,21 +18,8 @@ public class ItemVariant
     @Column(name = "variant_id", nullable = false)
     private Long variantId;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "date_created", nullable = false)
-    private Date dateCreated;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "date_modified", nullable = false)
-    private Date dateModified;
-
     @OneToMany(mappedBy = "itemVariant")
     private List<Item> items;
 
     public ItemVariant(){}
-
-    public ItemVariant(Date dateCreated, Date dateModified) {
-        this.dateCreated = dateCreated;
-        this.dateModified = dateModified;
-    }
 }

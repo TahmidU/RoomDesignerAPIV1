@@ -31,7 +31,9 @@ public class Favourite
 
     public Favourite(){}
 
-    public Favourite(Date favouriteDate) {
+    public Favourite(Date favouriteDate, User user, Item item) {
         this.favouriteDate = favouriteDate;
+        this.user = user;
+        this.item = item;
     }
 }
