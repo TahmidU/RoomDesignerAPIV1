@@ -24,7 +24,8 @@ public class Model
 
     public Model(){}
 
-    public Model(String modelDirectory) {
+    public Model(String modelDirectory, Item item) {
         this.modelDirectory = modelDirectory;
+        this.item = item;
     }
 }

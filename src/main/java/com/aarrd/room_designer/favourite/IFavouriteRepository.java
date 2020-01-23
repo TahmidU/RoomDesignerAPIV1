@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IFavouriteRepository extends JpaRepository<Favourite, Long>
 {
-    @Query("SELECT 1 FROM Favourite where userId = ?1 AND itemId = ?2")
+    @Query("SELECT 1 FROM Favourite WHERE userId = ?1 AND itemId = ?2")
     Favourite findByUserIdAndItemId(Long userId, Long itemId);
 }

@@ -28,8 +28,9 @@ public class Image
 
     public Image(){}
 
-    public Image(Date uploadDate, String imageDirectory) {
+    public Image(Date uploadDate, String imageDirectory, Item item) {
         this.uploadDate = uploadDate;
         this.imageDirectory = imageDirectory;
+        this.item = item;
     }
 }

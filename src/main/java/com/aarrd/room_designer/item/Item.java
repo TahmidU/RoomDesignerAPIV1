@@ -3,7 +3,7 @@ package com.aarrd.room_designer.item;
 import com.aarrd.room_designer.favourite.Favourite;
 import com.aarrd.room_designer.image.Image;
 import com.aarrd.room_designer.item.category.Category;
-import com.aarrd.room_designer.item.statistic.downlaod.ItemDownload;
+import com.aarrd.room_designer.item.statistic.download.ItemDownload;
 import com.aarrd.room_designer.item.statistic.view.ItemView;
 import com.aarrd.room_designer.item.type.Type;
 import com.aarrd.room_designer.item.variant.ItemVariant;
@@ -59,8 +59,13 @@ public class Item
 
     public Item(){}
 
-    public Item(String name, String desc) {
+    public Item(String name, String desc, User user, Category category, ItemVariant itemVariant, Type type)
+    {
         this.name = name;
         this.desc = desc;
+        this.user = user;
+        this.category = category;
+        this.itemVariant = itemVariant;
+        this.type = type;
     }
 }

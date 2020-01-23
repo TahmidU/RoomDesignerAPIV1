@@ -25,7 +25,9 @@ public class ItemView
 
     public ItemView(){}
 
-    public ItemView(Date date) {
+    public ItemView(Date date, Item item)
+    {
         this.date = date;
+        this.item = item;
     }
 }

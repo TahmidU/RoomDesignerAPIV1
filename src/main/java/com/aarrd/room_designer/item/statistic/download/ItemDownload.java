@@ -1,4 +1,4 @@
-package com.aarrd.room_designer.item.statistic.downlaod;
+package com.aarrd.room_designer.item.statistic.download;
 
 import com.aarrd.room_designer.item.Item;
 import lombok.Data;
@@ -27,7 +27,8 @@ public class ItemDownload
 
     public ItemDownload(){}
 
-    public ItemDownload(Date date) {
+    public ItemDownload(Date date, Item item) {
         this.date = date;
+        this.item = item;
     }
 }

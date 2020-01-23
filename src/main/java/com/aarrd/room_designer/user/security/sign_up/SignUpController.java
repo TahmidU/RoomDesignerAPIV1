@@ -9,6 +9,7 @@ import com.aarrd.room_designer.user.security.vertification.VerificationToken;
 import com.aarrd.room_designer.user.security.vertification.registration.OnRegistrationComplete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,50 +17,29 @@ import java.util.Calendar;
 
 @RestController
 @RequestMapping("/sign-up")
-public class SignUpController
+public class SignUpController implements ISignUpController
 {
-    @Autowired
-    private IUserRepository userRepository;
+    private final ISignUpService signUpService;
 
     @Autowired
-    private IVerificationTokenRepository verificationTokenRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
-
-    @PostMapping("/v1")
-    public void signUp(@RequestBody SignUpUser signUpUser)
-    {
-        User user = new User(signUpUser.getFirstName(),signUpUser.getLastName(),
-                bCryptPasswordEncoder.encode(signUpUser.getPassword()), signUpUser.getEmail(),
-                signUpUser.getPhoneNum(), false);
-        userRepository.save(user);
-        applicationEventPublisher.publishEvent(new OnRegistrationComplete(user));
+    public SignUpController(ISignUpService signUpService) {
+        this.signUpService = signUpService;
     }
 
-    @GetMapping("/reject-reason")
-    public void reason(){}
-
-    @PostMapping("/confirmation")
-    public void confirmAccount(@RequestParam int token) throws TokenDoesNotExistException, TokenExpiredException
+    @Override
+    @PostMapping("/v1")
+    public HttpStatus signUp(@RequestBody SignUpUser signUpUser)
     {
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
-        User user = verificationToken.getUser();
-        if(user != null)
-        {
-            if((verificationToken.getExpiry() - (Calendar.getInstance()).getTime().getTime()) <= 0)
-            {
-                throw new TokenExpiredException("Token has expired.");
-            }
+        signUpService.signUp(signUpUser);
+        return HttpStatus.OK;
+    }
 
-            user.setActive(true);
-            userRepository.save(user);
-        }else
-            throw new TokenDoesNotExistException("Token does not exist!");
-
+    @Override
+    @PostMapping("/confirmation")
+    public HttpStatus confirmAccount(@RequestParam int token) throws TokenDoesNotExistException, TokenExpiredException
+    {
+        signUpService.confirmation(token);
+        return HttpStatus.OK;
     }
 
 }
