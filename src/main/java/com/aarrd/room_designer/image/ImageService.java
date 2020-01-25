@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.EnumSet;
 
 @Service
-public class ImageService
+public class ImageService implements IImageService
 {
     private IStorageService storageService;
     private final String ROOT_LOCATION;

@@ -13,7 +13,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "/images")
-public class ImageController
+public class ImageController implements IImageController
 {
     private final ImageService imageService;
 

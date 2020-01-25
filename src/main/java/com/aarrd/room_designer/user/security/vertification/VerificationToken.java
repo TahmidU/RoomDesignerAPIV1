@@ -2,6 +2,7 @@ package com.aarrd.room_designer.user.security.vertification;
 
 import com.aarrd.room_designer.user.User;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -29,6 +30,11 @@ public class VerificationToken
     private User user;
 
     public VerificationToken(){}
+
+    public VerificationToken(int token, long expiry) {
+        this.token = token;
+        this.expiry = expiry;
+    }
 
     public VerificationToken(int token, User user, long expiry) {
         this.token = token;

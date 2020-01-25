@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 
 @Service
-public class ModelService
+public class ModelService implements IModelService
 {
     private IStorageService storageService;
     private final String ROOT_LOCATION;

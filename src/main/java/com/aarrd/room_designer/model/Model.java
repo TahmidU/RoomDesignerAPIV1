@@ -2,6 +2,7 @@ package com.aarrd.room_designer.model;
 
 import com.aarrd.room_designer.item.Item;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -23,6 +24,10 @@ public class Model
     private Item item;
 
     public Model(){}
+
+    public Model(String modelDirectory) {
+        this.modelDirectory = modelDirectory;
+    }
 
     public Model(String modelDirectory, Item item) {
         this.modelDirectory = modelDirectory;

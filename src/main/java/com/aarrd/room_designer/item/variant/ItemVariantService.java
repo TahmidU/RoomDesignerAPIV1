@@ -1,10 +1,12 @@
 package com.aarrd.room_designer.item.variant;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ItemVariantService implements IItemVariantService
 {
     private final IItemVariantRepository itemVariantRepository;
@@ -20,17 +22,17 @@ public class ItemVariantService implements IItemVariantService
     {
         for(Long id: itemIds)
             itemVariantRepository.delete(itemVariantRepository.getOne(id));
-        return addVariant();
+        return addVariant().getVariantId();
     }
 
     @Override
-    public List<Long> separateVariants(List<Long> itemIds)
+    public List<ItemVariant> separateVariants(List<Long> itemIds)
     {
-        List<Long> itemVariantIds = new ArrayList<>();
+        List<ItemVariant> itemVariants = new ArrayList<>();
         for(Long id: itemIds)
-            itemVariantIds.add(addVariant());
+            itemVariants.add(addVariant());
 
-        return itemVariantIds;
+        return itemVariants;
     }
 
     @Override
@@ -39,9 +41,8 @@ public class ItemVariantService implements IItemVariantService
     }
 
     @Override
-    public Long addVariant() {
+    public ItemVariant addVariant() {
         ItemVariant itemVariant = new ItemVariant();
-        itemVariantRepository.save(itemVariant);
-        return itemVariant.getVariantId();
+        return itemVariantRepository.save(itemVariant);
     }
 }

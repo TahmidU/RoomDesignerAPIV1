@@ -2,6 +2,8 @@ package com.aarrd.room_designer.image;
 
 import com.aarrd.room_designer.item.Item;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -27,6 +29,11 @@ public class Image
     private Item item;
 
     public Image(){}
+
+    public Image(Date uploadDate, String imageDirectory) {
+        this.uploadDate = uploadDate;
+        this.imageDirectory = imageDirectory;
+    }
 
     public Image(Date uploadDate, String imageDirectory, Item item) {
         this.uploadDate = uploadDate;

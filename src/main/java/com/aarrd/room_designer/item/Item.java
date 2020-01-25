@@ -7,8 +7,10 @@ import com.aarrd.room_designer.item.statistic.download.ItemDownload;
 import com.aarrd.room_designer.item.statistic.view.ItemView;
 import com.aarrd.room_designer.item.type.Type;
 import com.aarrd.room_designer.item.variant.ItemVariant;
+import com.aarrd.room_designer.model.Model;
 import com.aarrd.room_designer.user.User;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -29,6 +31,11 @@ public class Item
     @Column(name = "desc", length = 1000)
     private String desc;
 
+    @OneToOne(orphanRemoval = true)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @JoinColumn(name = "model_id", nullable = true)
+    private Model model;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -38,23 +45,27 @@ public class Item
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "variant_id", nullable = false)
+    @JoinColumn(name = "variant_id", nullable = true)
     private ItemVariant itemVariant;
 
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
     private Type type;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", orphanRemoval = true)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<Image> images;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", orphanRemoval = true)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<ItemDownload> itemDownloads;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", orphanRemoval = true)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<ItemView> itemViews;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", orphanRemoval = true)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<Favourite> favourites;
 
     public Item(){}

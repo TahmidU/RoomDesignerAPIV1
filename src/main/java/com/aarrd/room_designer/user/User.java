@@ -4,6 +4,7 @@ import com.aarrd.room_designer.favourite.Favourite;
 import com.aarrd.room_designer.item.Item;
 import com.aarrd.room_designer.user.security.vertification.VerificationToken;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -37,13 +38,16 @@ public class User
     @Column(name = "active", nullable = false, columnDefinition = "BIT", length = 1)
     private Boolean active;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<Item> items;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<Favourite> favourites;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<VerificationToken> verificationTokens;
 
     public User() {

@@ -14,7 +14,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "/models")
-public class ModelController
+public class ModelController implements IModelController
 {
     private final ModelService modelService;
 

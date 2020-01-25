@@ -9,7 +9,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping(value = "/favourite")
-public class FavouriteController
+public class FavouriteController implements IFavouriteController
 {
     private final FavouriteService favouriteService;
 

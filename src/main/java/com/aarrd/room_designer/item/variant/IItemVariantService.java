@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface IItemVariantService
 {
-    List<Long> separateVariants(List<Long> itemIds);
+    List<ItemVariant> separateVariants(List<Long> itemIds);
     Long mergeVariant(List<Long> itemIds);
     void removeVariant(Long id);
-    Long addVariant();
+    ItemVariant addVariant();
 }

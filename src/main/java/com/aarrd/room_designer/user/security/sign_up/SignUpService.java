@@ -10,9 +10,11 @@ import com.aarrd.room_designer.user.security.vertification.registration.OnRegist
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 
+@Service
 public class SignUpService implements ISignUpService
 {
     private IUserRepository userRepository;

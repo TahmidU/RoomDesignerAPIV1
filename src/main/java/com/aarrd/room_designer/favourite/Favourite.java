@@ -26,10 +26,15 @@ public class Favourite
     private User user;
 
     @ManyToOne
+
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     public Favourite(){}
+
+    public Favourite(Date favouriteDate) {
+        this.favouriteDate = favouriteDate;
+    }
 
     public Favourite(Date favouriteDate, User user, Item item) {
         this.favouriteDate = favouriteDate;

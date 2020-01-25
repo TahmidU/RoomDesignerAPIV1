@@ -2,6 +2,7 @@ package com.aarrd.room_designer.item.statistic.download;
 
 import com.aarrd.room_designer.item.Item;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -22,10 +23,15 @@ public class ItemDownload
     private Date date;
 
     @ManyToOne
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     public ItemDownload(){}
+
+    public ItemDownload(Date date) {
+        this.date = date;
+    }
 
     public ItemDownload(Date date, Item item) {
         this.date = date;
