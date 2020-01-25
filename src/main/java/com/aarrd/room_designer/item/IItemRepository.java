@@ -9,6 +9,9 @@ import java.util.List;
 @Repository
 public interface IItemRepository extends JpaRepository<Item, Long>
 {
-    @Query("SELECT * FROM Item WHERE itemVariant = ?1")
+    @Query("FROM Item WHERE variantId = ?1")
     List<Item> findByVariantId(Long variantId);
+
+    @Query("FROM Item WHERE userId = ?1")
+    List<Item> findByUserId(Long userId);
 }

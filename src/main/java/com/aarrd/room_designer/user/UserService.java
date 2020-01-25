@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 
 @Service
-public class UserService
+public class UserService implements IUserService
 {
     @Autowired
     private IUserRepository userRepository;
@@ -41,9 +41,9 @@ public class UserService
         return HttpStatus.CONFLICT;
     }
 
-    public Long getID(String email)
+    @Override
+    public User findById(Long userId)
     {
-        return userRepository.findByEmail(email).getUserId();
+        return userRepository.getOne(userId);
     }
-
 }

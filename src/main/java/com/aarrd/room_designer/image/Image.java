@@ -24,20 +24,25 @@ public class Image
     @Column(name = "image_directory", unique = true, nullable = false)
     private String imageDirectory;
 
+    @Column(name = "is_thumbnail", nullable = false, columnDefinition = "BIT", length = 1)
+    private Boolean isThumbnail;
+
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     public Image(){}
 
-    public Image(Date uploadDate, String imageDirectory) {
+    public Image(Date uploadDate, String imageDirectory, Boolean isThumbnail) {
         this.uploadDate = uploadDate;
         this.imageDirectory = imageDirectory;
+        this.isThumbnail = isThumbnail;
     }
 
-    public Image(Date uploadDate, String imageDirectory, Item item) {
+    public Image(Date uploadDate, String imageDirectory, Boolean isThumbnail, Item item) {
         this.uploadDate = uploadDate;
         this.imageDirectory = imageDirectory;
+        this.isThumbnail = isThumbnail;
         this.item = item;
     }
 }

@@ -24,7 +24,7 @@ public class FileSystemIStorageService implements IStorageService
     private final Path ROOT_LOCATION;
     private final String IMAGE;
     private final String MODEL;
-
+    
     @Autowired
     public FileSystemIStorageService(StorageProperties properties)
     {
@@ -46,9 +46,9 @@ public class FileSystemIStorageService implements IStorageService
     }
 
     @Override
-    public void store(MultipartFile file, Long Id, EnumSet<StorageTypeFlag> flags)
+    public void store(MultipartFile file, Long userId, Long itemId, EnumSet<StorageTypeFlag> flags)
     {
-        String location = ROOT_LOCATION.toString() + "\\" + Id;
+        String location = ROOT_LOCATION.toString() + "\\" + userId + "\\" + itemId;
 
         //Check which flag is set.
         if(flags.contains(StorageTypeFlag.IMAGE))
@@ -93,19 +93,19 @@ public class FileSystemIStorageService implements IStorageService
     }
 
     @Override
-    public Resource loadAsResource(String path) {
+    public Resource loadResource(String filename) {
         try
         {
-            Path file = Paths.get(path);
+            Path file = Paths.get(filename);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable())
                 return resource;
             else
-                throw new StorageFileNotFoundException("Could not read file: " + path);
+                throw new StorageFileNotFoundException("Could not read file: " + filename);
 
         }catch (MalformedURLException e)
         {
-            throw new StorageFileNotFoundException("Could not read file " + path, e);
+            throw new StorageFileNotFoundException("Could not read file " + filename, e);
         }
     }
 

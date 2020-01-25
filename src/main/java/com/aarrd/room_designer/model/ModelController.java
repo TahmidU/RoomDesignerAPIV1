@@ -24,27 +24,35 @@ public class ModelController implements IModelController
         this.modelService = modelService;
     }
 
-    @GetMapping("/fetch/{filename:.+}")
+    @GetMapping("/fetch")
     @ResponseBody
-    public ResponseEntity<Resource> serverFile(@PathVariable String filename, Principal principal)
+    @Override
+    public ResponseEntity<Resource> serverFile(Long modelId, Principal principal)
     {
-        Resource file = modelService.serve(filename, principal);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
-                file.getFilename() + "\"").body(file);
+        Resource file = modelService.serve(modelId);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(file);
     }
 
     @PostMapping("/upload")
-    public HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file, Principal principal)
+    @Override
+    public HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam Long modelId, Principal principal)
     {
-        modelService.store(file, principal);
+        modelService.store(file, modelId, principal);
         return HttpStatus.CREATED;
     }
 
-    @DeleteMapping("delete/{filename:.+}")
-    public HttpStatus handleDeletion(@PathVariable String filename, Principal principal)
+    @DeleteMapping("/delete")
+    @Override
+    public HttpStatus handleDeletion(@RequestParam Long modelId, @RequestParam Long itemId, Principal principal)
     {
-        modelService.delete(filename, principal);
-        return HttpStatus.OK;
+        return modelService.delete(modelId, itemId, principal);
+    }
+
+    @GetMapping("/relevant")
+    @Override
+    public ResponseEntity<Long> relevantModel(@RequestParam Long itemId)
+    {
+        return new ResponseEntity<Long>(modelService.relevantModel(itemId), HttpStatus.OK);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

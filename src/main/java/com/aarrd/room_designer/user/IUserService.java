@@ -9,5 +9,5 @@ public interface IUserService
 {
     HttpStatus userStat(UserLoginDetail userLoginDetail);
     HttpStatus changeDetails(Principal principal, UserDetail userDetail);
-    Long getID(String email);
+    User findById(Long userId);
 }

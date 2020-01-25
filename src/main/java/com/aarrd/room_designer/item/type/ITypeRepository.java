@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ITypeRepository extends JpaRepository<Type, Long>
 {
-    @Query("SELECT c FROM Type WHERE typeName = ?1")
+    @Query("FROM Type WHERE name = ?1")
     Type findByName(String name);
 }

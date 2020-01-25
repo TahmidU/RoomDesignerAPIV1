@@ -70,6 +70,12 @@ public class Item
 
     public Item(){}
 
+    public Item(String name, String desc)
+    {
+        this.name = name;
+        this.desc = desc;
+    }
+
     public Item(String name, String desc, User user, Category category, ItemVariant itemVariant, Type type)
     {
         this.name = name;

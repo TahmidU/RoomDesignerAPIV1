@@ -12,8 +12,8 @@ import java.util.stream.Stream;
 public interface IStorageService
 {
     void init();
-    void store(MultipartFile file, Long Id, EnumSet<StorageTypeFlag> flags);
+    void store(MultipartFile file, Long userId, Long itemId, EnumSet<StorageTypeFlag> flags);
     Stream<Path> loadAll();
-    Resource loadAsResource(String path);
+    Resource loadResource(String path);
     void delete(String path);
 }

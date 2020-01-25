@@ -20,15 +20,8 @@ public class ItemDownloadController implements IItemDownloadController
         this.itemDownloadService = itemDownloadService;
     }
 
-    @Override
-    @PostMapping(value = "/increment")
-    public HttpStatus incrementView(Long itemId) {
-        itemDownloadService.incrementDownload(itemId);
-        return HttpStatus.OK;
-    }
-
-    @Override
     @GetMapping(value = "/aggregate")
+    @Override
     public ResponseEntity<Integer> getViews(Long itemId)
     {
         return new ResponseEntity<Integer>(itemDownloadService.getDownloadsAggregate(itemId), HttpStatus.OK);

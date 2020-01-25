@@ -2,6 +2,7 @@ package com.aarrd.room_designer.item;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,18 @@ public class ItemController implements IItemController
     {
         itemService.addItem(item);
         return HttpStatus.OK;
+    }
+
+    @Override
+    public ResponseEntity<Item> fetchItem(Long itemId)
+    {
+        return new ResponseEntity<Item>(itemService.fetchItem(itemId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<Item>> fetchItemByUserId(Long userId)
+    {
+        return new ResponseEntity<List<Item>>(itemService.fetchUserItems(userId), HttpStatus.OK);
     }
 
     @PostMapping(value = "/remove")

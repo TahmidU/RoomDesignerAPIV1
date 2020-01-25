@@ -12,8 +12,9 @@ import java.security.Principal;
 
 public interface IModelController
 {
-    ResponseEntity<Resource> serverFile(@PathVariable String filename, Principal principal);
-    HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file, Principal principal);
-    HttpStatus handleDeletion(@PathVariable String filename, Principal principal);
+    ResponseEntity<Resource> serverFile(@RequestParam Long modelId, Principal principal);
+    HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file, Long modelId, Principal principal);
+    HttpStatus handleDeletion(@RequestParam Long modelId, @RequestParam Long itemId, Principal principal);
+    ResponseEntity<Long> relevantModel(@RequestParam Long itemId);
     ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc);
 }

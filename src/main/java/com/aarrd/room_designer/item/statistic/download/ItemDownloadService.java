@@ -20,11 +20,6 @@ public class ItemDownloadService implements IItemDownloadService
     }
 
     @Override
-    public void incrementDownload(Long itemId) {
-        itemDownloadRepository.save(new ItemDownload(new Date(), itemRepository.getOne(itemId)));
-    }
-
-    @Override
     public int getDownloadsAggregate(Long itemId)
     {
         return (itemDownloadRepository.findByItemId(itemId)).size();

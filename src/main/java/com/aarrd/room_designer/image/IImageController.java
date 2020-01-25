@@ -8,11 +8,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 public interface IImageController
 {
-    ResponseEntity<Resource> serverFile(@PathVariable String filename, Principal principal);
-    HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file, Principal principal);
-    HttpStatus handleDeletion(@PathVariable String filename, Principal principal);
+    ResponseEntity<Resource> serveImage(@RequestParam Long itemId);
+    ResponseEntity<Resource> serveThumbnail(@RequestParam Long itemId);
+    HttpStatus handleImageUpload(@RequestParam("file") MultipartFile file, @RequestParam Long itemId, Principal principal);
+    HttpStatus handleThumbnailUpload(@RequestParam("file") MultipartFile file, @RequestParam Long itemId, Principal principal);
+    HttpStatus handleDeletion(@RequestParam Long imageId, @RequestParam Long itemId, Principal principal);
+    ResponseEntity<List<Long>> relevantImages(@RequestParam Long itemId);
     ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc);
 }

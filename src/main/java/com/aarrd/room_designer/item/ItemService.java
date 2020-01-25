@@ -4,6 +4,8 @@ import com.aarrd.room_designer.item.category.ICategoryService;
 import com.aarrd.room_designer.item.type.ITypeService;
 import com.aarrd.room_designer.item.variant.IItemVariantService;
 import com.aarrd.room_designer.item.variant.ItemVariant;
+import com.aarrd.room_designer.user.IUserService;
+import com.aarrd.room_designer.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +19,18 @@ public class ItemService implements IItemService
 
     private final IItemVariantService itemVariantService;
     private final ICategoryService categoryService;
+    private final IUserService userService;
     private final ITypeService typeService;
 
     @Autowired
     public ItemService(IItemRepository itemRepository, IItemVariantService itemVariantService,
-                       ICategoryService categoryService, ITypeService typeService)
+                       ICategoryService categoryService, ITypeService typeService, IUserService userService)
     {
         this.itemRepository = itemRepository;
+
         this.itemVariantService = itemVariantService;
         this.categoryService = categoryService;
+        this.userService = userService;
         this.typeService = typeService;
     }
 
@@ -34,6 +39,18 @@ public class ItemService implements IItemService
     {
         item.setItemVariant(itemVariantService.addVariant());
         itemRepository.save(item);
+    }
+
+    @Override
+    public Item fetchItem(Long id)
+    {
+        return itemRepository.getOne(id);
+    }
+
+    @Override
+    public List<Item> fetchUserItems(Long userId)
+    {
+        return itemRepository.findByUserId(userId);
     }
 
     @Override
@@ -110,5 +127,11 @@ public class ItemService implements IItemService
 
         itemRepository.saveAll(items);
         itemVariantService.removeVariant(sharedVId);
+    }
+
+    @Override
+    public User getUser(Long itemId)
+    {
+        return itemRepository.getOne(itemId).getUser();
     }
 }

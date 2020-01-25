@@ -6,6 +6,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public interface IItemDownloadController
 {
-    HttpStatus incrementView(@RequestParam Long itemId);
     ResponseEntity<Integer> getViews(@RequestParam Long itemId);
 }
