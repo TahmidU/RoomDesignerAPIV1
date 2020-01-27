@@ -19,7 +19,7 @@ public class Model
     @Column(name = "model_directory", unique = true, nullable = false)
     private String modelDirectory;
 
-    @OneToOne
+    @OneToOne(optional = false)
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 

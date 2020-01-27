@@ -68,7 +68,7 @@ public class ImageController implements IImageController
 
     @GetMapping("/relevant")
     @Override
-    public ResponseEntity<List<Long>> relevantImages(Long itemId)
+    public ResponseEntity<List<Long>> relevantImages(@RequestParam Long itemId)
     {
         return new ResponseEntity<List<Long>>(imageService.relevantImages(itemId), HttpStatus.OK);
     }

@@ -1,6 +1,7 @@
 package com.aarrd.room_designer.user.security.sign_up;
 
 import com.aarrd.room_designer.user.IUserRepository;
+import com.aarrd.room_designer.user.SignInUser;
 import com.aarrd.room_designer.user.User;
 import com.aarrd.room_designer.user.security.vertification.IVerificationTokenRepository;
 import com.aarrd.room_designer.user.security.vertification.TokenDoesNotExistException;
@@ -44,14 +45,16 @@ public class SignUpService implements ISignUpService
     }
 
     @Override
-    public void confirmation(int token) throws TokenDoesNotExistException, TokenExpiredException
+    public void confirmation(int token, String email) throws TokenDoesNotExistException, TokenExpiredException
     {
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
-        User user = verificationToken.getUser();
-        if(user != null)
+        User user = userRepository.findByEmail(email);
+        VerificationToken verificationToken = verificationTokenRepository.findByUser(user.getUserId());
+        if(verificationToken != null)
         {
+            verificationTokenRepository.delete(verificationToken);
             if((verificationToken.getExpiry() - (Calendar.getInstance()).getTime().getTime()) <= 0)
             {
+                applicationEventPublisher.publishEvent(new OnRegistrationComplete(user));
                 throw new TokenExpiredException("Token has expired.");
             }
 
@@ -59,5 +62,15 @@ public class SignUpService implements ISignUpService
             userRepository.save(user);
         }else
             throw new TokenDoesNotExistException("Token does not exist!");
+    }
+
+    @Override
+    public void resendVerificationToken(SignInUser signInUser)
+    {
+        User user = userRepository.findByEmail(signInUser.getEmail());
+        VerificationToken token = verificationTokenRepository.findByUser(user.getUserId());
+        verificationTokenRepository.delete(token);
+
+        applicationEventPublisher.publishEvent(new OnRegistrationComplete(user));
     }
 }

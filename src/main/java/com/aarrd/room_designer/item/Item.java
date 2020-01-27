@@ -28,12 +28,11 @@ public class Item
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "desc", length = 1000)
-    private String desc;
+    @Column(name = "description", length = 1000)
+    private String description;
 
-    @OneToOne(orphanRemoval = true)
+    @OneToOne(mappedBy = "item",orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
-    @JoinColumn(name = "model_id", nullable = true)
     private Model model;
 
     @ManyToOne
@@ -70,16 +69,16 @@ public class Item
 
     public Item(){}
 
-    public Item(String name, String desc)
+    public Item(String name, String description)
     {
         this.name = name;
-        this.desc = desc;
+        this.description = description;
     }
 
-    public Item(String name, String desc, User user, Category category, ItemVariant itemVariant, Type type)
+    public Item(String name, String description, User user, Category category, ItemVariant itemVariant, Type type)
     {
         this.name = name;
-        this.desc = desc;
+        this.description = description;
         this.user = user;
         this.category = category;
         this.itemVariant = itemVariant;

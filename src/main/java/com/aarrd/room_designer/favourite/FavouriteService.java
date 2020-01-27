@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class FavouriteService implements IFavouriteService
@@ -49,5 +51,27 @@ public class FavouriteService implements IFavouriteService
             throw new FavouriteException("User not found");
 
         favouriteRepository.delete(favouriteRepository.findByUserIdAndItemId(user.getUserId(), itemId));
+    }
+
+    @Override
+    public List<Long> fetchFavourited(Principal principal)
+    {
+        List<Favourite> favourites =
+                favouriteRepository.findByUserId(userRepository.findByEmail(principal.getName()).getUserId());
+
+        List<Long> favouriteIds = new ArrayList<>();
+        for(Favourite f : favourites)
+            favouriteIds.add(f.getFavouriteId());
+
+        return favouriteIds;
+    }
+
+    @Override
+    public Boolean fetchItemFavourited(Principal principal, Long itemId)
+    {
+        Long userId = userRepository.findByEmail(principal.getName()).getUserId();
+        if(favouriteRepository.findByUserIdAndItemId(userId,itemId) != null)
+            return true;
+        return false;
     }
 }

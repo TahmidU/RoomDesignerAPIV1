@@ -68,6 +68,9 @@ public class ModelService implements IModelService
         if(!typeFound)
             throw new StorageException("File is not an acceptable type: " + file.getOriginalFilename());
 
+        if(modelRepository.findByItemId(itemId) != null)
+            throw new StorageException("A Model already exists.");
+
         Long userId = userRepository.findByEmail(principal.getName()).getUserId();
         storageService.store(file, userId, itemId,EnumSet.of(StorageTypeFlag.MODEL));
 
@@ -91,6 +94,7 @@ public class ModelService implements IModelService
             return HttpStatus.UNAUTHORIZED;
 
         storageService.delete(modelRepository.getOne(modelId).getModelDirectory());
+        modelRepository.delete(modelRepository.getOne(modelId));
         return HttpStatus.OK;
     }
 

@@ -29,7 +29,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter
                 .antMatchers(SIGN_UP_URL).permitAll()
                 .antMatchers("/sign-up/confirmation").permitAll()
                 .antMatchers("/user/user-stat").permitAll()
-                .antMatchers("/images/upload").permitAll()
+                .antMatchers("/user/authenticate").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

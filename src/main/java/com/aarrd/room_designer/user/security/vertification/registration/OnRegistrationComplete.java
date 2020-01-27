@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.context.ApplicationEvent;
 
-@Data
 @EqualsAndHashCode(callSuper = false)
 public class OnRegistrationComplete extends ApplicationEvent
 {
@@ -14,5 +13,9 @@ public class OnRegistrationComplete extends ApplicationEvent
     public OnRegistrationComplete(final User user) {
         super(user);
         this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

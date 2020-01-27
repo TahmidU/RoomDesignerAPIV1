@@ -1,54 +1,56 @@
-package com.aarrd.room_designer.user.security.vertification.registration;
+package com.aarrd.room_designer.user.security.password.token_production;
 
 import com.aarrd.room_designer.user.User;
-import com.aarrd.room_designer.user.security.vertification.IVerificationTokenRepository;
-import com.aarrd.room_designer.user.security.vertification.VerificationToken;
+import com.aarrd.room_designer.user.security.password.IPasswordTokenRepository;
+import com.aarrd.room_designer.user.security.password.PasswordToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.xml.crypto.Data;
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-import java.util.UUID;
 
 @Component
-public class RegistrationListener implements ApplicationListener<OnRegistrationComplete>
+public class TokenListener implements ApplicationListener<TokenEvent>
 {
-    private IVerificationTokenRepository verificationTokenRepository;
+    private IPasswordTokenRepository tokenRepository;
     private JavaMailSender javaMailSender;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public RegistrationListener(IVerificationTokenRepository verificationTokenRepository,
-                                JavaMailSender javaMailSender)
+    public TokenListener(IPasswordTokenRepository tokenRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+                         JavaMailSender javaMailSender)
     {
-        this.verificationTokenRepository = verificationTokenRepository;
+        this.tokenRepository = tokenRepository;
         this.javaMailSender = javaMailSender;
     }
 
     @Override
-    public void onApplicationEvent(OnRegistrationComplete event) {
-        this.sendToken(event);
+    public void onApplicationEvent(TokenEvent event)
+    {
+        sendToken(event);
     }
 
-    private void sendToken(OnRegistrationComplete event)
+    private void sendToken(TokenEvent event)
     {
         User user = event.getUser();
         Random random = new Random();
-        int min = (int) Math.pow(10, 4);
-        int max = (int) Math.pow(10, 5) - 1;
-        int token = random.nextInt((max - min) + 1);
+        int min = (int) Math.pow(10,4);
+        int max = (int) Math.pow(10,5)-1;
+        int token = random.nextInt((max-min)+1);
 
-        VerificationToken verificationToken = new VerificationToken(token, user, calculateExpiryDate());
+        long expiry = calculateExpiryDate();
 
-        verificationTokenRepository.save(verificationToken);
+        PasswordToken passwordToken = new PasswordToken(token, expiry, user);
+
+        tokenRepository.save(passwordToken);
 
         String email = user.getEmail();
-        String subject = "Registration Confirmation";
+        String subject = "Password Recovery";
         String message = String.valueOf(token);
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();

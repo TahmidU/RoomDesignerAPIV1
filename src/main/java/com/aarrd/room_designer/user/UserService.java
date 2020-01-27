@@ -3,9 +3,12 @@ package com.aarrd.room_designer.user;
 import com.aarrd.room_designer.user.security.sign_up.UserLoginDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.Principal;
 
 @Service
@@ -42,8 +45,17 @@ public class UserService implements IUserService
     }
 
     @Override
-    public User findById(Long userId)
+    public ResponseEntity<String> authenticateUser(SignInUser signInUser) throws IOException
     {
-        return userRepository.getOne(userId);
+        User user = userRepository.findByEmail(signInUser.getEmail());
+        if(user != null)
+        {
+            if(user.getActive()) {
+                if (bCryptPasswordEncoder.matches(signInUser.getPassword(), user.getPassword()))
+                    return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+            }else
+                return new ResponseEntity<String>("NOT ACTIVE", HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<String>("NOT FOUND", HttpStatus.UNAUTHORIZED);
     }
 }

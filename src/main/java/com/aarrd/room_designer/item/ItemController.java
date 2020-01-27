@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -21,9 +22,10 @@ public class ItemController implements IItemController
 
     @PostMapping(value = "/add")
     @Override
-    public HttpStatus addItem(@RequestBody Item item)
+    public HttpStatus addItem(@RequestBody Item item, Principal principal, @RequestParam String catName,
+                              @RequestParam String typeName)
     {
-        itemService.addItem(item);
+        itemService.addItem(item, principal, catName, typeName);
         return HttpStatus.OK;
     }
 

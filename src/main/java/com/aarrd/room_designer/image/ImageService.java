@@ -103,8 +103,8 @@ public class ImageService implements IImageService
         if(!(user.getEmail()).equals(principal.getName()))
             return HttpStatus.UNAUTHORIZED;
 
-
         storageService.delete(imageRepository.getOne(imageId).getImageDirectory());
+        imageRepository.delete(imageRepository.getOne(imageId));
         return HttpStatus.OK;
     }
 

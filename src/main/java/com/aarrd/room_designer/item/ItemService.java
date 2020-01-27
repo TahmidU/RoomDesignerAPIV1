@@ -1,14 +1,18 @@
 package com.aarrd.room_designer.item;
 
+import com.aarrd.room_designer.item.category.ICategoryRepository;
 import com.aarrd.room_designer.item.category.ICategoryService;
+import com.aarrd.room_designer.item.type.ITypeRepository;
 import com.aarrd.room_designer.item.type.ITypeService;
 import com.aarrd.room_designer.item.variant.IItemVariantService;
 import com.aarrd.room_designer.item.variant.ItemVariant;
+import com.aarrd.room_designer.user.IUserRepository;
 import com.aarrd.room_designer.user.IUserService;
 import com.aarrd.room_designer.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,28 +20,32 @@ import java.util.List;
 public class ItemService implements IItemService
 {
     private final IItemRepository itemRepository;
+    private final IUserRepository userRepository;
+    private final ICategoryRepository categoryRepository;
+    private final ITypeRepository typeRepository;
 
     private final IItemVariantService itemVariantService;
-    private final ICategoryService categoryService;
-    private final IUserService userService;
-    private final ITypeService typeService;
+
 
     @Autowired
     public ItemService(IItemRepository itemRepository, IItemVariantService itemVariantService,
-                       ICategoryService categoryService, ITypeService typeService, IUserService userService)
+                       ICategoryRepository categoryRepository, ITypeRepository typeRepository, IUserRepository userRepository)
     {
         this.itemRepository = itemRepository;
 
         this.itemVariantService = itemVariantService;
-        this.categoryService = categoryService;
-        this.userService = userService;
-        this.typeService = typeService;
+        this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
+        this.typeRepository = typeRepository;
     }
 
     @Override
-    public void addItem(Item item)
+    public void addItem(Item item, Principal principal, String catName, String typeName)
     {
+        item.setUser(userRepository.findByEmail(principal.getName()));
         item.setItemVariant(itemVariantService.addVariant());
+        item.setCategory(categoryRepository.findByName(catName));
+        item.setType(typeRepository.findByName(typeName));
         itemRepository.save(item);
     }
 
@@ -67,7 +75,7 @@ public class ItemService implements IItemService
     {
         Item item = itemRepository.getOne(modItem.getItemId());
         item.setName(modItem.getName());
-        item.setDesc(modItem.getDesc());
+        item.setDescription(modItem.getDescription());
 
         itemRepository.save(item);
     }
@@ -76,7 +84,7 @@ public class ItemService implements IItemService
     public void changeCategory(Long itemId, String name)
     {
         Item item = itemRepository.getOne(itemId);
-        item.setCategory(categoryService.categoryId(name));
+        item.setCategory(categoryRepository.findByName(name));
         itemRepository.save(item);
     }
 
@@ -84,7 +92,7 @@ public class ItemService implements IItemService
     public void changeType(Long itemId, String name)
     {
         Item item = itemRepository.getOne(itemId);
-        item.setType(typeService.typeId(name));
+        item.setType(typeRepository.findByName(name));
         itemRepository.save(item);
     }
 

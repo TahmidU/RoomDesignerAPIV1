@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface IImageRepository extends JpaRepository<Image, Long>
 {
-    @Query("FROM Image WHERE itemId = ?1")
+    @Query("FROM Image WHERE item_Id = ?1")
     List<Image> findByItemId(Long itemId);
 
     @Query("SELECT imageDirectory FROM Image WHERE itemId = ?1 AND isThumbnail = 1")

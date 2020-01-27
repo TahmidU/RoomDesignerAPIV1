@@ -2,6 +2,7 @@ package com.aarrd.room_designer.user;
 
 import com.aarrd.room_designer.favourite.Favourite;
 import com.aarrd.room_designer.item.Item;
+import com.aarrd.room_designer.user.security.password.PasswordToken;
 import com.aarrd.room_designer.user.security.vertification.VerificationToken;
 import lombok.Data;
 import org.hibernate.annotations.Cascade;
@@ -38,6 +39,14 @@ public class User
     @Column(name = "active", nullable = false, columnDefinition = "BIT", length = 1)
     private Boolean active;
 
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    private VerificationToken verificationTokens;
+
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    private PasswordToken passwordToken;
+
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<Item> items;
@@ -45,10 +54,6 @@ public class User
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<Favourite> favourites;
-
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
-    private List<VerificationToken> verificationTokens;
 
     public User() {
     }
@@ -61,5 +66,4 @@ public class User
         this.phoneNum = phoneNum;
         this.active = active;
     }
-
 }

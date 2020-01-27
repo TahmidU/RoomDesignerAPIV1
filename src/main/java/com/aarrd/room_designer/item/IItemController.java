@@ -5,11 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface IItemController
 {
-    HttpStatus addItem(@RequestBody Item item);
+    HttpStatus addItem(@RequestBody Item item, Principal principal, @RequestParam String catName,
+                       @RequestParam String typeName);
     ResponseEntity<Item> fetchItem(@RequestParam Long itemId);
     ResponseEntity<List<Item>> fetchItemByUserId(@RequestParam Long userId);
     HttpStatus removeItem(@RequestParam Long id);
