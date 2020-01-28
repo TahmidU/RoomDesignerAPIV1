@@ -24,6 +24,6 @@ public class ItemDownloadController implements IItemDownloadController
     @Override
     public ResponseEntity<Integer> getViews(Long itemId)
     {
-        return new ResponseEntity<Integer>(itemDownloadService.getDownloadsAggregate(itemId), HttpStatus.OK);
+        return new ResponseEntity<>(itemDownloadService.getDownloadsAggregate(itemId), HttpStatus.OK);
     }
 }

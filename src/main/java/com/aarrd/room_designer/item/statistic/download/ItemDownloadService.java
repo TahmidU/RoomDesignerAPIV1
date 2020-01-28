@@ -20,7 +20,7 @@ public class ItemDownloadService implements IItemDownloadService
     }
 
     @Override
-    public int getDownloadsAggregate(Long itemId)
+    public Integer getDownloadsAggregate(Long itemId)
     {
         return (itemDownloadRepository.findByItemId(itemId)).size();
     }

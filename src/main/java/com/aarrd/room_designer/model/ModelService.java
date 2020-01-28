@@ -56,6 +56,7 @@ public class ModelService implements IModelService
         permissibleTypes.add("model/gltf+json");
     }
 
+    @Override
     public void store(@RequestParam("file") MultipartFile file, Long itemId, Principal principal)
     {
         //Check file type...
@@ -79,6 +80,7 @@ public class ModelService implements IModelService
         modelRepository.save(new Model(directory, itemRepository.getOne(itemId)));
     }
 
+    @Override
     public Resource serve(Long modelId)
     {
         Model model = modelRepository.getOne(modelId);
@@ -87,6 +89,7 @@ public class ModelService implements IModelService
         return storageService.loadResource(model.getModelDirectory());
     }
 
+    @Override
     public HttpStatus delete(Long modelId, Long itemId, Principal principal)
     {
         User user = itemRepository.getOne(itemId).getUser();
@@ -102,5 +105,10 @@ public class ModelService implements IModelService
     public Long relevantModel(Long itemId)
     {
         return modelRepository.findByItemId(itemId).getModelId();
+    }
+
+    @Override
+    public Boolean modelExists(Long itemId) {
+        return modelRepository.findByItemId(itemId) != null;
     }
 }

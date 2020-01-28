@@ -38,7 +38,7 @@ public class FavouriteController implements IFavouriteController
     @GetMapping(value = "/fetch")
     @Override
     public ResponseEntity<List<Long>> fetchFavourited(Principal principal) {
-        return new ResponseEntity<List<Long>>(favouriteService.fetchFavourited(principal), HttpStatus.OK);
+        return new ResponseEntity<>(favouriteService.fetchFavourited(principal), HttpStatus.OK);
     }
 
     @GetMapping(value = "fetch-item")

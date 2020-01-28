@@ -29,16 +29,18 @@ public class ItemController implements IItemController
         return HttpStatus.OK;
     }
 
+    @GetMapping(value = "/fetch-item")
     @Override
-    public ResponseEntity<Item> fetchItem(Long itemId)
+    public ResponseEntity<?> fetchItem(@RequestParam Long itemId)
     {
-        return new ResponseEntity<Item>(itemService.fetchItem(itemId), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.fetchItem(itemId), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/fetch-items-userid")
     @Override
-    public ResponseEntity<List<Item>> fetchItemByUserId(Long userId)
+    public ResponseEntity<?> fetchItemsByUserId(@RequestParam Long userId)
     {
-        return new ResponseEntity<List<Item>>(itemService.fetchUserItems(userId), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.fetchUserItems(userId), HttpStatus.OK);
     }
 
     @PostMapping(value = "/remove")
@@ -87,5 +89,19 @@ public class ItemController implements IItemController
     {
         itemService.separateVariants(itemIds);
         return HttpStatus.OK;
+    }
+
+    @GetMapping(value = "/fetch-variants")
+    @Override
+    public ResponseEntity<?> fetchItemVariant(@RequestParam Long itemId)
+    {
+        return new ResponseEntity<>(itemService.fetchItemVariants(itemId), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/fetch-all")
+    @Override
+    public ResponseEntity<List<Object[]>> fetchItems(@RequestParam Integer pageNum)
+    {
+        return new ResponseEntity<>(itemService.fetchItems(pageNum), HttpStatus.OK);
     }
 }

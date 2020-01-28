@@ -66,4 +66,14 @@ public class User
         this.phoneNum = phoneNum;
         this.active = active;
     }
+
+    public User(Long userId, String firstName, String lastName, String password, String email, String phoneNum, Boolean active) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.email = email;
+        this.phoneNum = phoneNum;
+        this.active = active;
+    }
 }

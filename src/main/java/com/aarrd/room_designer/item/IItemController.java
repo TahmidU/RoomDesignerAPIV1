@@ -12,12 +12,14 @@ public interface IItemController
 {
     HttpStatus addItem(@RequestBody Item item, Principal principal, @RequestParam String catName,
                        @RequestParam String typeName);
-    ResponseEntity<Item> fetchItem(@RequestParam Long itemId);
-    ResponseEntity<List<Item>> fetchItemByUserId(@RequestParam Long userId);
+    ResponseEntity<?> fetchItem(@RequestParam Long itemId);
+    ResponseEntity<?> fetchItemsByUserId(@RequestParam Long userId);
     HttpStatus removeItem(@RequestParam Long id);
     HttpStatus modifyItem(@RequestBody Item modItem);
     HttpStatus changeCategory(@RequestParam Long itemId, @RequestParam String name);
     HttpStatus changeType(@RequestParam Long itemId, @RequestParam String name);
     HttpStatus mergeVariants(@RequestParam List<Long> itemIds);
     HttpStatus separateVariants(@RequestParam List<Long> itemIds);
+    ResponseEntity<?> fetchItemVariant(@RequestParam Long itemId);
+    ResponseEntity<?> fetchItems(@RequestParam Integer pageNum);
 }

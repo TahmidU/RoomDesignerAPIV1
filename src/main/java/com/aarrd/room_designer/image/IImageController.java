@@ -18,5 +18,6 @@ public interface IImageController
     HttpStatus handleThumbnailUpload(@RequestParam("file") MultipartFile file, @RequestParam Long itemId, Principal principal);
     HttpStatus handleDeletion(@RequestParam Long imageId, @RequestParam Long itemId, Principal principal);
     ResponseEntity<List<Long>> relevantImages(@RequestParam Long itemId);
+    ResponseEntity<Integer> numberOfImages(@RequestParam Long itemId);
     ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc);
 }

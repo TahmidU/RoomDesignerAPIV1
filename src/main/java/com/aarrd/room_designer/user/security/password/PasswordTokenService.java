@@ -46,17 +46,17 @@ public class PasswordTokenService implements IPasswordTokenService
         {
             if ((passwordToken.getExpiry() - (Calendar.getInstance()).getTime().getTime()) <= 0) {
                 applicationEventPublisher.publishEvent(new OnRegistrationComplete(user));
-                return new ResponseEntity<String>("Token has expired!", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<String>("TOKEN EXPIRED", HttpStatus.UNAUTHORIZED);
             }
 
             if (passwordToken.getToken() == token) {
                 user.setPassword(bCryptPasswordEncoder.encode(password));
                 userRepository.save(user);
                 passwordTokenRepository.delete(passwordToken);
-                return new ResponseEntity<String>("Success", HttpStatus.OK);
+                return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
             }
         }
 
-        return new ResponseEntity<String>("Token does not exist!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<String>("TOKEN NOT FOUND", HttpStatus.UNAUTHORIZED);
     }
 }

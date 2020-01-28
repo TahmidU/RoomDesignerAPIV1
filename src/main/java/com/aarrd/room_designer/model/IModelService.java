@@ -16,4 +16,5 @@ public interface IModelService
     Resource serve(Long modelId);
     HttpStatus delete(Long modelId, Long itemId, Principal principal);
     Long relevantModel(Long itemId);
+    Boolean modelExists(Long itemId);
 }

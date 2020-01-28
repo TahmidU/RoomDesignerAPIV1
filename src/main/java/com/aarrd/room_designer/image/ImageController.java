@@ -73,6 +73,13 @@ public class ImageController implements IImageController
         return new ResponseEntity<List<Long>>(imageService.relevantImages(itemId), HttpStatus.OK);
     }
 
+    @GetMapping("/user-amount")
+    @Override
+    public ResponseEntity<Integer> numberOfImages(Long itemId)
+    {
+        return new ResponseEntity<Integer>(imageService.numberOfImages(itemId), HttpStatus.OK);
+    }
+
     @ExceptionHandler(StorageFileNotFoundException.class)
     @Override
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc)

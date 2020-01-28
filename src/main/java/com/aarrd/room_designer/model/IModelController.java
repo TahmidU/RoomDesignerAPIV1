@@ -16,5 +16,6 @@ public interface IModelController
     HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file, Long modelId, Principal principal);
     HttpStatus handleDeletion(@RequestParam Long modelId, @RequestParam Long itemId, Principal principal);
     ResponseEntity<Long> relevantModel(@RequestParam Long itemId);
+    ResponseEntity<Boolean> modelExists(@RequestParam Long itemId);
     ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc);
 }

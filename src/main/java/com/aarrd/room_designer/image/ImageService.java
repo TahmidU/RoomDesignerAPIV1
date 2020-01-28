@@ -116,4 +116,10 @@ public class ImageService implements IImageService
             imageIds.add(i.getImageId());
         return imageIds;
     }
+
+    @Override
+    public Integer numberOfImages(Long itemId)
+    {
+        return imageRepository.findByItemId(itemId).size();
+    }
 }

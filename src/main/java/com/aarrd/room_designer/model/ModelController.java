@@ -6,7 +6,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,6 +52,13 @@ public class ModelController implements IModelController
     public ResponseEntity<Long> relevantModel(@RequestParam Long itemId)
     {
         return new ResponseEntity<Long>(modelService.relevantModel(itemId), HttpStatus.OK);
+    }
+
+    @GetMapping("/model-exists")
+    @Override
+    public ResponseEntity<Boolean> modelExists(Long itemId)
+    {
+        return new ResponseEntity<Boolean>(modelService.modelExists(itemId), HttpStatus.OK);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

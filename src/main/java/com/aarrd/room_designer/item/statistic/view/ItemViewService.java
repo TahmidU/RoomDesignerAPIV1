@@ -1,13 +1,9 @@
 package com.aarrd.room_designer.item.statistic.view;
 
 import com.aarrd.room_designer.item.IItemRepository;
-import com.aarrd.room_designer.item.variant.IItemVariantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class ItemViewService implements IItemViewService
@@ -28,9 +24,8 @@ public class ItemViewService implements IItemViewService
     }
 
     @Override
-    public int getViews(Long itemId)
+    public Integer getViews(Long itemId)
     {
-        List<ItemView> itemViews = itemViewRepository.findByItemId(itemId);
-        return itemViews.size();
+        return itemViewRepository.findByItemId(itemId).size();
     }
 }

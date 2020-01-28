@@ -16,4 +16,5 @@ public interface IImageService
     Resource serveThumbnail(Long itemId);
     HttpStatus delete(Long imageId, Long itemId, Principal principal);
     List<Long> relevantImages(Long itemId);
+    Integer numberOfImages(Long itemId);
 }

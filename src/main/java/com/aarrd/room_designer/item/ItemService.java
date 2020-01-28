@@ -1,19 +1,17 @@
 package com.aarrd.room_designer.item;
 
 import com.aarrd.room_designer.item.category.ICategoryRepository;
-import com.aarrd.room_designer.item.category.ICategoryService;
 import com.aarrd.room_designer.item.type.ITypeRepository;
-import com.aarrd.room_designer.item.type.ITypeService;
-import com.aarrd.room_designer.item.variant.IItemVariantService;
+import com.aarrd.room_designer.item.variant.IItemVariantRepository;
 import com.aarrd.room_designer.item.variant.ItemVariant;
 import com.aarrd.room_designer.user.IUserRepository;
-import com.aarrd.room_designer.user.IUserService;
 import com.aarrd.room_designer.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,17 +21,15 @@ public class ItemService implements IItemService
     private final IUserRepository userRepository;
     private final ICategoryRepository categoryRepository;
     private final ITypeRepository typeRepository;
-
-    private final IItemVariantService itemVariantService;
+    private final IItemVariantRepository itemVariantRepository;
 
 
     @Autowired
-    public ItemService(IItemRepository itemRepository, IItemVariantService itemVariantService,
+    public ItemService(IItemRepository itemRepository, IItemVariantRepository itemVariantRepository,
                        ICategoryRepository categoryRepository, ITypeRepository typeRepository, IUserRepository userRepository)
     {
         this.itemRepository = itemRepository;
-
-        this.itemVariantService = itemVariantService;
+        this.itemVariantRepository = itemVariantRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.typeRepository = typeRepository;
@@ -43,31 +39,32 @@ public class ItemService implements IItemService
     public void addItem(Item item, Principal principal, String catName, String typeName)
     {
         item.setUser(userRepository.findByEmail(principal.getName()));
-        item.setItemVariant(itemVariantService.addVariant());
+        item.setItemVariant(addVariant());
         item.setCategory(categoryRepository.findByName(catName));
         item.setType(typeRepository.findByName(typeName));
+        item.setDate(new Date());
         itemRepository.save(item);
     }
 
     @Override
-    public Item fetchItem(Long id)
+    public Object fetchItem(Long itemId)
     {
-        return itemRepository.getOne(id);
+        return itemRepository.findByItemId(itemId);
     }
 
     @Override
-    public List<Item> fetchUserItems(Long userId)
+    public List<Object[]> fetchUserItems(Long userId)
     {
         return itemRepository.findByUserId(userId);
     }
 
     @Override
-    public void removeItem(Long id)
+    public void removeItem(Long itemId)
     {
-        Item item = itemRepository.getOne(id);
+        Item item = itemRepository.getOne(itemId);
         ItemVariant itemVariant = item.getItemVariant();
         itemRepository.delete(item);
-        itemVariantService.removeVariant(itemVariant.getVariantId());
+        removeVariant(itemVariant.getVariantId());
     }
 
     @Override
@@ -103,7 +100,7 @@ public class ItemService implements IItemService
         for(Long iid : itemIds)
             items.add(itemRepository.getOne(iid));
 
-        ItemVariant newItemVariant = itemVariantService.addVariant();
+        ItemVariant newItemVariant = addVariant();
 
         List<Long> oldVariants = new ArrayList<>();
         for(Item i : items)
@@ -113,7 +110,7 @@ public class ItemService implements IItemService
         }
 
         for(Long o : oldVariants)
-            itemVariantService.removeVariant(o);
+            removeVariant(o);
     }
 
     @Override
@@ -125,7 +122,10 @@ public class ItemService implements IItemService
 
         Long sharedVId = items.get(0).getItemVariant().getVariantId();
 
-        List<ItemVariant> variantIds = itemVariantService.separateVariants(itemIds);
+        List<ItemVariant> variantIds = new ArrayList<>();
+        for(Long id: itemIds)
+            variantIds.add(addVariant());
+
         int count = 0;
         for(Item i: items)
         {
@@ -134,12 +134,35 @@ public class ItemService implements IItemService
         }
 
         itemRepository.saveAll(items);
-        itemVariantService.removeVariant(sharedVId);
+        removeVariant(sharedVId);
+    }
+
+    @Override
+    public List<Object[]> fetchItemVariants(Long itemId)
+    {
+        Item item = itemRepository.getOne(itemId);
+        return itemRepository.findByVariantId(item.getItemVariant().getVariantId());
     }
 
     @Override
     public User getUser(Long itemId)
     {
         return itemRepository.getOne(itemId).getUser();
+    }
+
+    @Override
+    public List<Object[]> fetchItems(Integer pageNum)
+    {
+        return itemRepository.findAllItems(PageRequest.of(pageNum, 2));
+    }
+
+    private ItemVariant addVariant()
+    {
+        ItemVariant itemVariant = new ItemVariant();
+        return itemVariantRepository.save(itemVariant);
+    }
+
+    private void removeVariant(Long id) {
+        itemVariantRepository.delete(itemVariantRepository.getOne(id));
     }
 }

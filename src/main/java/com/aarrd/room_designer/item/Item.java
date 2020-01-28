@@ -13,6 +13,7 @@ import lombok.Data;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -30,6 +31,10 @@ public class Item
 
     @Column(name = "description", length = 1000)
     private String description;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "date", nullable = false)
+    private Date date;
 
     @OneToOne(mappedBy = "item",orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
@@ -69,16 +74,25 @@ public class Item
 
     public Item(){}
 
-    public Item(String name, String description)
+    public Item(String name, String description, Date date)
     {
         this.name = name;
         this.description = description;
+        this.date = date;
     }
 
-    public Item(String name, String description, User user, Category category, ItemVariant itemVariant, Type type)
+    public Item(Long itemId, String name, String description, Date date) {
+        this.itemId = itemId;
+        this.name = name;
+        this.description = description;
+        this.date = date;
+    }
+
+    public Item(String name, String description, Date date, User user, Category category, ItemVariant itemVariant, Type type)
     {
         this.name = name;
         this.description = description;
+        this.date = date;
         this.user = user;
         this.category = category;
         this.itemVariant = itemVariant;
