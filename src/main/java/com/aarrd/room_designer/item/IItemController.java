@@ -1,5 +1,6 @@
 package com.aarrd.room_designer.item;
 
+import com.sun.mail.iap.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ public interface IItemController
                        @RequestParam String typeName);
     ResponseEntity<?> fetchItem(@RequestParam Long itemId);
     ResponseEntity<?> fetchItemsByUserId(@RequestParam Long userId);
+    ResponseEntity<?> fetchItemByCategory(@RequestParam String catName, @RequestParam Integer pageNum);
     HttpStatus removeItem(@RequestParam Long id);
     HttpStatus modifyItem(@RequestBody Item modItem);
     HttpStatus changeCategory(@RequestParam Long itemId, @RequestParam String name);

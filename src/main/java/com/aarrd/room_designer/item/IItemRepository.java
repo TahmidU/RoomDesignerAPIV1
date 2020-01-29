@@ -22,4 +22,7 @@ public interface IItemRepository extends JpaRepository<Item, Long>
 
     @Query("SELECT i.itemId, i.name, i.description, i.date FROM Item i")
     List<Object[]> findAllItems(Pageable pageable);
+
+    @Query("SELECT i.itemId, i.name, i.description, i.date FROM Item i WHERE i.category.name = ?1")
+    List<Object[]> findByCategory(String catName, Pageable pageable);
 }

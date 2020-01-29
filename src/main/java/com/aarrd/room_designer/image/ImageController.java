@@ -14,7 +14,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/images")
+@RequestMapping(value = "/image")
 public class ImageController implements IImageController
 {
     private final ImageService imageService;
@@ -24,6 +24,11 @@ public class ImageController implements IImageController
         this.imageService = imageService;
     }
 
+    /**
+     * Retrieve image from server.
+     * @param itemId The items images are retrieved.
+     * @return ResponseEntity containing the Resource (the image).
+     */
     @GetMapping("/fetch-all")
     @ResponseBody
     @Override
@@ -33,6 +38,11 @@ public class ImageController implements IImageController
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(files);
     }
 
+    /**
+     * Retrieve the thumbnail for the item.
+     * @param itemId Item for the thumbnail.
+     * @return ResponseEntity containing the Resource (the image).
+     */
     @GetMapping("/fetch-thumbnail")
     @ResponseBody
     @Override
@@ -42,6 +52,13 @@ public class ImageController implements IImageController
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(file);
     }
 
+    /**
+     * 
+     * @param file
+     * @param itemId
+     * @param principal
+     * @return
+     */
     @PostMapping("/upload-image")
     @Override
     public HttpStatus handleImageUpload(@RequestParam("file") MultipartFile file, @RequestParam Long itemId,

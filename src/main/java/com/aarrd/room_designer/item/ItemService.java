@@ -8,6 +8,7 @@ import com.aarrd.room_designer.user.IUserRepository;
 import com.aarrd.room_designer.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -56,6 +57,13 @@ public class ItemService implements IItemService
     public List<Object[]> fetchUserItems(Long userId)
     {
         return itemRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<Object[]> fetchItemsByCat(String catName, Integer pageNum)
+    {
+        return itemRepository.findByCategory(catName, PageRequest.of(pageNum, 9,
+                Sort.by(Sort.Direction.ASC, "date")));
     }
 
     @Override
@@ -153,7 +161,8 @@ public class ItemService implements IItemService
     @Override
     public List<Object[]> fetchItems(Integer pageNum)
     {
-        return itemRepository.findAllItems(PageRequest.of(pageNum, 2));
+        return itemRepository.findAllItems(PageRequest.of(pageNum, 9,
+                Sort.by(Sort.Direction.ASC, "date")));
     }
 
     private ItemVariant addVariant()

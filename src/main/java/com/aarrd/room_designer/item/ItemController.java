@@ -43,6 +43,13 @@ public class ItemController implements IItemController
         return new ResponseEntity<>(itemService.fetchUserItems(userId), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/fetch-by-cat")
+    @Override
+    public ResponseEntity<?> fetchItemByCategory(@RequestParam String catName, @RequestParam Integer pageNum)
+    {
+        return new ResponseEntity<>(itemService.fetchItemsByCat(catName, pageNum), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/remove")
     @Override
     public HttpStatus removeItem(@RequestParam Long id)

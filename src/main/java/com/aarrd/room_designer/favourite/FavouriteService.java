@@ -28,6 +28,11 @@ public class FavouriteService implements IFavouriteService
         this.userRepository = userRepository;
     }
 
+    /**
+     * Users favourited item saved into the database.
+     * @param principal Currently logged in user.
+     * @param itemId Item that was favourited by the user.
+     */
     @Override
     public void addFavourite(Principal principal, Long itemId)
     {
@@ -36,12 +41,15 @@ public class FavouriteService implements IFavouriteService
 
         if(user == null)
             throw new FavouriteException("User not found");
-        if(item == null)
-            throw new FavouriteException("Item not found");
 
         favouriteRepository.save(new Favourite(new Date(), user, item));
     }
 
+    /**
+     * Item unfavourited by the user.
+     * @param principal Currently logged in user.
+     * @param itemId Item that was unfavourited by the user.
+     */
     @Override
     public void removeFavourite(Principal principal, Long itemId)
     {
@@ -53,6 +61,11 @@ public class FavouriteService implements IFavouriteService
         favouriteRepository.delete(favouriteRepository.findByUserIdAndItemId(user.getUserId(), itemId));
     }
 
+    /**
+     * All items that were favourited by the user.
+     * @param principal Currently logged in user.
+     * @return
+     */
     @Override
     public List<Long> fetchFavourited(Principal principal)
     {
@@ -66,6 +79,12 @@ public class FavouriteService implements IFavouriteService
         return favouriteIds;
     }
 
+    /**
+     * Is the item favourited?
+     * @param principal Currently logged in user.
+     * @param itemId Item that is checked.
+     * @return
+     */
     @Override
     public Boolean fetchItemFavourited(Principal principal, Long itemId)
     {
