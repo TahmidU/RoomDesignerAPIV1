@@ -18,6 +18,12 @@ public class UserDetailServiceImpl implements UserDetailsService
     @Autowired
     private IUserRepository IUserRepository;
 
+    /**
+     * Return user details via email.
+     * @param email user email.
+     * @return UserDetails.
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException
     {

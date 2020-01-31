@@ -29,6 +29,10 @@ public class PasswordTokenService implements IPasswordTokenService
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    /**
+     * Place user in database. Trigger password recovery event.
+     * @param email user email.
+     */
     @Override
     public void sendEmail(String email)
     {
@@ -36,6 +40,13 @@ public class PasswordTokenService implements IPasswordTokenService
         applicationEventPublisher.publishEvent(new TokenEvent(user));
     }
 
+    /**
+     * Change password.
+     * @param email user email.
+     * @param token token.
+     * @param password password.
+     * @return ResponseEntity
+     */
     @Override
     public ResponseEntity<String> changePassword(String email, int token, String password)
     {

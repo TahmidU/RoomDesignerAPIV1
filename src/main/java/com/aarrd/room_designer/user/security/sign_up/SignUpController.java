@@ -27,6 +27,11 @@ public class SignUpController implements ISignUpController
         this.signUpService = signUpService;
     }
 
+    /**
+     * User sign up. Send email for verification.
+     * @param signUpUser (Request Body) SignUpUser.
+     * @return HttpStatus.
+     */
     @PostMapping("/v1")
     @Override
     public HttpStatus signUp(@RequestBody SignUpUser signUpUser)
@@ -35,6 +40,14 @@ public class SignUpController implements ISignUpController
         return HttpStatus.OK;
     }
 
+    /**
+     * Confirm verification token.
+     * @param token (request parameter) token.
+     * @param email (request parameter) user email.
+     * @return HttpStatus.
+     * @throws TokenDoesNotExistException
+     * @throws TokenExpiredException
+     */
     @PostMapping("/confirmation")
     @Override
     public HttpStatus confirmAccount(@RequestParam int token, @RequestParam String email) throws TokenDoesNotExistException, TokenExpiredException
@@ -43,9 +56,14 @@ public class SignUpController implements ISignUpController
         return HttpStatus.OK;
     }
 
+    /**
+     * Resend verification email.
+     * @param signInUser (request body) SignInUser.
+     * @return HttpStatus.
+     */
     @PostMapping("/resend-token")
     @Override
-    public HttpStatus resendVerificationToken(SignInUser signInUser)
+    public HttpStatus resendVerificationToken(@RequestBody SignInUser signInUser)
     {
         signUpService.resendVerificationToken(signInUser);
         return HttpStatus.OK;

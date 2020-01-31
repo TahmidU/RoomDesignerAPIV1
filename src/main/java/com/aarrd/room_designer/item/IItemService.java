@@ -19,7 +19,7 @@ public interface IItemService
     void mergeVariants(List<Long> itemIds);
     void separateVariants(List<Long> itemIds);
     Long getVariantId(Long itemId);
-    List<Object[]> fetchItemVariants(Long itemVId);
+    List<Object[]> fetchItemVariants(Long itemId);
     User getUser(Long itemId);
     List<Object[]> fetchItems(Integer pageNum);
 }

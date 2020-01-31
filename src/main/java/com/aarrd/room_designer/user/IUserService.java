@@ -10,7 +10,6 @@ import java.security.Principal;
 
 public interface IUserService
 {
-    HttpStatus userStat(UserLoginDetail userLoginDetail);
     HttpStatus changeDetails(Principal principal, UserDetail userDetail);
     ResponseEntity<String> authenticateUser(SignInUser signInUser) throws IOException;
 }

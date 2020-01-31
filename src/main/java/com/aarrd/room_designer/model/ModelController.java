@@ -23,23 +23,44 @@ public class ModelController implements IModelController
         this.modelService = modelService;
     }
 
+    /**
+     * Serve model file to the client.
+     * @param modelId (request parameter) ID of the model.
+     * @param principal currently logged in user.
+     * @return ResponseEntity containing resource.
+     */
     @GetMapping("/fetch")
     @ResponseBody
     @Override
-    public ResponseEntity<Resource> serverFile(Long modelId, Principal principal)
+    public ResponseEntity<Resource> serverFile(@RequestParam Long modelId, Principal principal)
     {
         Resource file = modelService.serve(modelId);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(file);
     }
 
+    /**
+     * Handles model uploads to the server.
+     * @param file (request parameter) multipart file.
+     * @param modelId (request parameter) ID of the model.
+     * @param principal currently logged in user.
+     * @return HttpStatus.
+     */
     @PostMapping("/upload")
     @Override
-    public HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam Long modelId, Principal principal)
+    public HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam Long modelId,
+                                       Principal principal)
     {
         modelService.store(file, modelId, principal);
         return HttpStatus.CREATED;
     }
 
+    /**
+     * Handle deletion of the model.
+     * @param modelId (request parameter) ID of the model.
+     * @param itemId (request parameter) ID of the item.
+     * @param principal currently logged in user.
+     * @return HttpStatus.
+     */
     @DeleteMapping("/delete")
     @Override
     public HttpStatus handleDeletion(@RequestParam Long modelId, @RequestParam Long itemId, Principal principal)
@@ -47,6 +68,11 @@ public class ModelController implements IModelController
         return modelService.delete(modelId, itemId, principal);
     }
 
+    /**
+     * Retrieve the model associated with the item.
+     * @param itemId (request parameter) ID of the item.
+     * @return ResponseEntity containing long (id of the model).
+     */
     @GetMapping("/relevant")
     @Override
     public ResponseEntity<Long> relevantModel(@RequestParam Long itemId)
@@ -54,6 +80,11 @@ public class ModelController implements IModelController
         return new ResponseEntity<Long>(modelService.relevantModel(itemId), HttpStatus.OK);
     }
 
+    /**
+     * Check if model exists for the given item.
+     * @param itemId (request parameter) ID of the item.
+     * @return ResponseEntity containg a boolean.
+     */
     @GetMapping("/model-exists")
     @Override
     public ResponseEntity<Boolean> modelExists(Long itemId)

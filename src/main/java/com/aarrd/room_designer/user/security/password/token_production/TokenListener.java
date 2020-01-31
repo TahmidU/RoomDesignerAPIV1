@@ -29,12 +29,20 @@ public class TokenListener implements ApplicationListener<TokenEvent>
         this.javaMailSender = javaMailSender;
     }
 
+    /**
+     * On event execution...
+     * @param event event.
+     */
     @Override
     public void onApplicationEvent(TokenEvent event)
     {
         sendToken(event);
     }
 
+    /**
+     * Send password token to user email.
+     * @param event event.
+     */
     private void sendToken(TokenEvent event)
     {
         User user = event.getUser();
@@ -62,6 +70,10 @@ public class TokenListener implements ApplicationListener<TokenEvent>
         javaMailSender.send(simpleMailMessage);
     }
 
+    /**
+     * Calculate token expiration.
+     * @return Long (the expiration).
+     */
     private long calculateExpiryDate()
     {
         Calendar calendar = Calendar.getInstance();

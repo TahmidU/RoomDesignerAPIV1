@@ -168,14 +168,14 @@ public class ItemController implements IItemController
 
     /**
      * Fetch items by item variant id.
-     * @param itemVId (request parameter) item variant ids
+     * @param itemId (request parameter) item variant ids
      * @return ResponseEntity.
      */
     @GetMapping(value = "/fetch-variants")
     @Override
-    public ResponseEntity<?> fetchItemVariant(@RequestParam Long itemVId)
+    public ResponseEntity<?> fetchItemVariant(@RequestParam Long itemId)
     {
-        return new ResponseEntity<>(itemService.fetchItemVariants(itemVId), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.fetchItemVariants(itemId), HttpStatus.OK);
     }
 
     /**

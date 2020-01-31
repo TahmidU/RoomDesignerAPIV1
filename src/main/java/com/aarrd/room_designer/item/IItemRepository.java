@@ -26,6 +26,6 @@ public interface IItemRepository extends JpaRepository<Item, Long>
     @Query("SELECT i.itemId, i.name, i.description, i.date FROM Item i WHERE i.category.name = ?1")
     List<Object[]> findByCategory(String catName, Pageable pageable);
 
-    @Query("SELECT i.variantId FROM Item i WHERE i.itemId = ?1")
+    @Query("SELECT i.itemVariant.variantId FROM Item i WHERE i.itemId = ?1")
     Long findVariantIdByItemId(Long itemId);
 }

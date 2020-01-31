@@ -29,6 +29,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.authenticationManager = authenticationManager;
     }
 
+    /**
+     * On attempting to authenticate...
+     * @param request http request.
+     * @param response http response.
+     * @return Authentication.
+     * @throws AuthenticationException
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException
@@ -47,6 +54,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
     }
 
+    /**
+     * On successful authentication create JWT token,
+     * @param request http request.
+     * @param response http response.
+     * @param chain filter.
+     * @param authResult authentication result.
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authResult)

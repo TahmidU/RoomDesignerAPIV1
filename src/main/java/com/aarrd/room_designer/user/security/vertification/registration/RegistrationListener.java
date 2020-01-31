@@ -30,11 +30,19 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         this.javaMailSender = javaMailSender;
     }
 
+    /**
+     * On event execution...
+     * @param event event.
+     */
     @Override
     public void onApplicationEvent(OnRegistrationComplete event) {
         this.sendToken(event);
     }
 
+    /**
+     * Send password token to user email.
+     * @param event event.
+     */
     private void sendToken(OnRegistrationComplete event)
     {
         User user = event.getUser();
@@ -60,6 +68,10 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         javaMailSender.send(simpleMailMessage);
     }
 
+    /**
+     * Calculate token expiration.
+     * @return Long (the expiration).
+     */
     private long calculateExpiryDate()
     {
         Calendar calendar = Calendar.getInstance();

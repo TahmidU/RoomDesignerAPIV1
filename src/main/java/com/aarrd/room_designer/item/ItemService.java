@@ -36,6 +36,13 @@ public class ItemService implements IItemService
         this.typeRepository = typeRepository;
     }
 
+    /**
+     * Add item to database.
+     * @param item item.
+     * @param principal currently logged in user.
+     * @param catName category name.
+     * @param typeName type name.
+     */
     @Override
     public void addItem(Item item, Principal principal, String catName, String typeName)
     {
@@ -47,18 +54,34 @@ public class ItemService implements IItemService
         itemRepository.save(item);
     }
 
+    /**
+     * Fetch item by item ID.
+     * @param itemId ID of the item.
+     * @return Object.
+     */
     @Override
     public Object fetchItem(Long itemId)
     {
         return itemRepository.findByItemId(itemId);
     }
 
+    /**
+     * Fetch users uploaded items.
+     * @param userId ID of the user.
+     * @return List of objects.
+     */
     @Override
     public List<Object[]> fetchUserItems(Long userId)
     {
         return itemRepository.findByUserId(userId);
     }
 
+    /**
+     * Fetch all items with the category criterion. Paged to prevent retrieving all items at once.
+     * @param catName category name.
+     * @param pageNum page number.
+     * @return List of objects.
+     */
     @Override
     public List<Object[]> fetchItemsByCat(String catName, Integer pageNum)
     {
@@ -66,6 +89,10 @@ public class ItemService implements IItemService
                 Sort.by(Sort.Direction.ASC, "date")));
     }
 
+    /**
+     * Remove item from database.
+     * @param itemId ID of item
+     */
     @Override
     public void removeItem(Long itemId)
     {
@@ -75,6 +102,10 @@ public class ItemService implements IItemService
         removeVariant(itemVariant.getVariantId());
     }
 
+    /**
+     * Edit existing item in database.
+     * @param modItem item.
+     */
     @Override
     public void modifyItem(Item modItem)
     {
@@ -85,6 +116,11 @@ public class ItemService implements IItemService
         itemRepository.save(item);
     }
 
+    /**
+     * Change category of existing item.
+     * @param itemId ID of item.
+     * @param name category name.
+     */
     @Override
     public void changeCategory(Long itemId, String name)
     {
@@ -93,6 +129,11 @@ public class ItemService implements IItemService
         itemRepository.save(item);
     }
 
+    /**
+     * Change type of existing item.
+     * @param itemId ID of item.
+     * @param name type name.
+     */
     @Override
     public void changeType(Long itemId, String name)
     {
@@ -101,6 +142,10 @@ public class ItemService implements IItemService
         itemRepository.save(item);
     }
 
+    /**
+     * Merge the item variant ids of the following items.
+     * @param itemIds ID of the items.
+     */
     @Override
     public void mergeVariants(List<Long> itemIds)
     {
@@ -121,6 +166,10 @@ public class ItemService implements IItemService
             removeVariant(o);
     }
 
+    /**
+     * Seperate the item variant ids of the following items.
+     * @param itemIds ID of the items.
+     */
     @Override
     public void separateVariants(List<Long> itemIds)
     {
@@ -145,25 +194,45 @@ public class ItemService implements IItemService
         removeVariant(sharedVId);
     }
 
+    /**
+     * Get the item variant of the item.
+     * @param itemId ID of the item.
+     * @return Long (item variant id).
+     */
     @Override
     public Long getVariantId(Long itemId)
     {
         return itemRepository.findVariantIdByItemId(itemId);
     }
 
+    /**
+     * Fetch all the variants of the item.
+     * @param itemId ID of the item.
+     * @return List of objects.
+     */
     @Override
-    public List<Object[]> fetchItemVariants(Long itemVId)
+    public List<Object[]> fetchItemVariants(Long itemId)
     {
-        Item item = itemRepository.getOne(itemVId);
+        Item item = itemRepository.getOne(itemId);
         return itemRepository.findByVariantId(item.getItemVariant().getVariantId());
     }
 
+    /**
+     * Return the user of the item.
+     * @param itemId ID of the item.
+     * @return User.
+     */
     @Override
     public User getUser(Long itemId)
     {
         return itemRepository.getOne(itemId).getUser();
     }
 
+    /**
+     * Fetch all item. Paged to prevent retrieval of items all at once.
+     * @param pageNum page number.
+     * @return List of objects.
+     */
     @Override
     public List<Object[]> fetchItems(Integer pageNum)
     {
@@ -171,12 +240,20 @@ public class ItemService implements IItemService
                 Sort.by(Sort.Direction.ASC, "date")));
     }
 
+    /**
+     * Add an item variant.
+     * @return ItemVariant.
+     */
     private ItemVariant addVariant()
     {
         ItemVariant itemVariant = new ItemVariant();
         return itemVariantRepository.save(itemVariant);
     }
 
+    /**
+     * Remove an item variant.
+     * @param id ID of the item variant.
+     */
     private void removeVariant(Long id) {
         itemVariantRepository.delete(itemVariantRepository.getOne(id));
     }

@@ -23,6 +23,6 @@ public interface IItemController
     HttpStatus mergeVariants(@RequestParam List<Long> itemIds);
     HttpStatus separateVariants(@RequestParam List<Long> itemIds);
     ResponseEntity<Long> getVariantId(@RequestParam Long itemId);
-    ResponseEntity<?> fetchItemVariant(@RequestParam Long itemVId);
+    ResponseEntity<?> fetchItemVariant(@RequestParam Long itemId);
     ResponseEntity<?> fetchItems(@RequestParam Integer pageNum);
 }

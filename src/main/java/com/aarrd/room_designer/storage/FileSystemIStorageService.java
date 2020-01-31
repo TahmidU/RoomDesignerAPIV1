@@ -33,6 +33,9 @@ public class FileSystemIStorageService implements IStorageService
         this.MODEL = properties.getMODEL();
     }
 
+    /**
+     * Initialise the root location.
+     */
     @Override
     public void init() {
         try
@@ -45,6 +48,13 @@ public class FileSystemIStorageService implements IStorageService
         }
     }
 
+    /**
+     * Store the multipart file.
+     * @param file multipart file.
+     * @param userId ID of the user.
+     * @param itemId ID of the item.
+     * @param flags IMAGE or MODEL.
+     */
     @Override
     public void store(MultipartFile file, Long userId, Long itemId, EnumSet<StorageTypeFlag> flags)
     {
@@ -78,6 +88,10 @@ public class FileSystemIStorageService implements IStorageService
         }
     }
 
+    /**
+     * Load the paths of everything from the root location.
+     * @return Stream containing paths.
+     */
     @Override
     public Stream<Path> loadAll()
     {
@@ -92,6 +106,11 @@ public class FileSystemIStorageService implements IStorageService
         }
     }
 
+    /**
+     * Load the resource.
+     * @param filename path of the file as well as its name.
+     * @return Resource.
+     */
     @Override
     public Resource loadResource(String filename) {
         try
@@ -109,6 +128,10 @@ public class FileSystemIStorageService implements IStorageService
         }
     }
 
+    /**
+     * Delete the resource.
+     * @param path path of the file as well as its name.
+     */
     @Override
     public void delete(String path)
     {

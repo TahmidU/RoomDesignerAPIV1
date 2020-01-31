@@ -15,13 +15,12 @@ public class UserController implements IUserController
     @Autowired
     private UserService userService;
 
-    @PutMapping(value = "/user-stat", produces = "application/json")
-    @Override
-    public HttpStatus userStat(UserLoginDetail userLoginDetail)
-    {
-        return userService.userStat(userLoginDetail);
-    }
-
+    /**
+     * Change user details.
+     * @param principal currently logged in user.
+     * @param userDetail (request body) UserDetail.
+     * @return HttpStatus.
+     */
     @PutMapping(value = "/change-details", produces = "application/json")
     @Override
     public HttpStatus changeDetails(Principal principal, @RequestBody UserDetail userDetail)
@@ -29,6 +28,12 @@ public class UserController implements IUserController
         return userService.changeDetails(principal, userDetail);
     }
 
+    /**
+     * Authenticate user.
+     * @param signInUser (request body) SignInUser.
+     * @return ResponseEntity containing string.
+     * @throws IOException
+     */
     @GetMapping(value = "/authenticate")
     @Override
     public ResponseEntity<String> authenticateUser(@RequestBody SignInUser signInUser) throws IOException

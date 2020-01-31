@@ -35,6 +35,10 @@ public class SignUpService implements ISignUpService
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
+    /**
+     * User sign up. Send email and by triggering an event.
+     * @param signUpUser SignUpUser.
+     */
     @Override
     public void signUp(SignUpUser signUpUser) {
         User user = new User(signUpUser.getFirstName(),signUpUser.getLastName(),
@@ -44,6 +48,13 @@ public class SignUpService implements ISignUpService
         applicationEventPublisher.publishEvent(new OnRegistrationComplete(user));
     }
 
+    /**
+     * Confirm the verification token.
+     * @param token token.
+     * @param email user email.
+     * @throws TokenDoesNotExistException
+     * @throws TokenExpiredException
+     */
     @Override
     public void confirmation(int token, String email) throws TokenDoesNotExistException, TokenExpiredException
     {
@@ -64,6 +75,10 @@ public class SignUpService implements ISignUpService
             throw new TokenDoesNotExistException("Token does not exist!");
     }
 
+    /**
+     * Resend verification token.
+     * @param signInUser SignInUser.
+     */
     @Override
     public void resendVerificationToken(SignInUser signInUser)
     {

@@ -56,6 +56,12 @@ public class ModelService implements IModelService
         permissibleTypes.add("model/gltf+json");
     }
 
+    /**
+     * Handle storing model.
+     * @param file multipart file.
+     * @param itemId ID of the item.
+     * @param principal currently logged in user.
+     */
     @Override
     public void store(@RequestParam("file") MultipartFile file, Long itemId, Principal principal)
     {
@@ -80,6 +86,11 @@ public class ModelService implements IModelService
         modelRepository.save(new Model(directory, itemRepository.getOne(itemId)));
     }
 
+    /**
+     * Retrieve and serve file to client.
+     * @param modelId ID of the model.
+     * @return Resource (the model).
+     */
     @Override
     public Resource serve(Long modelId)
     {
@@ -89,6 +100,13 @@ public class ModelService implements IModelService
         return storageService.loadResource(model.getModelDirectory());
     }
 
+    /**
+     * Handle deletion of the model.
+     * @param modelId ID of the model.
+     * @param itemId ID of the item.
+     * @param principal currently logged in user.
+     * @return HttpStatus.
+     */
     @Override
     public HttpStatus delete(Long modelId, Long itemId, Principal principal)
     {
@@ -101,12 +119,22 @@ public class ModelService implements IModelService
         return HttpStatus.OK;
     }
 
+    /**
+     * Find the id of the model for a given item.
+     * @param itemId ID of the item.
+     * @return Long (id of the model).
+     */
     @Override
     public Long relevantModel(Long itemId)
     {
         return modelRepository.findByItemId(itemId).getModelId();
     }
 
+    /**
+     * Check if a model exists for a given model.
+     * @param itemId ID of the item.
+     * @return Boolean.
+     */
     @Override
     public Boolean modelExists(Long itemId) {
         return modelRepository.findByItemId(itemId) != null;

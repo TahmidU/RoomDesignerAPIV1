@@ -21,6 +21,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter
 
     private static final String SIGN_UP_URL = "/sign-up/v1";
 
+    /**
+     * Security configuration for http requests.
+     * @param http http.
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
@@ -38,6 +43,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter
         //http.exceptionHandling().accessDeniedPage("user/user-stat");
     }
 
+    /**
+     * Security configuration for password encoder.
+     * @param auth authentication manager builder.
+     * @throws Exception
+     */
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception
     {

@@ -19,15 +19,12 @@ public class UserService implements IUserService
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public HttpStatus userStat(UserLoginDetail userLoginDetail)
-    {
-        User user = userRepository.findByEmail(userLoginDetail.getUsername());
-        if(user != null && !user.getActive())
-            return HttpStatus.UNAUTHORIZED;
-        else
-            return HttpStatus.NOT_FOUND;
-    }
-
+    /**
+     * Change user details.
+     * @param principal currently logged in user.
+     * @param userDetail UserDetail.
+     * @return HttpStatus.
+     */
     public HttpStatus changeDetails(Principal principal, UserDetail userDetail)
     {
         User user = userRepository.findByEmail(principal.getName());
@@ -44,6 +41,12 @@ public class UserService implements IUserService
         return HttpStatus.CONFLICT;
     }
 
+    /**
+     * Authenticate user.
+     * @param signInUser (request body) SignInUser.
+     * @return ResponseEntity containing string.
+     * @throws IOException
+     */
     @Override
     public ResponseEntity<String> authenticateUser(SignInUser signInUser) throws IOException
     {
