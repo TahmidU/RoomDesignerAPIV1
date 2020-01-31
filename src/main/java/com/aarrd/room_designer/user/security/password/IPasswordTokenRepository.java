@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface IPasswordTokenRepository extends JpaRepository<PasswordToken, Long>
 {
-    @Query("FROM PasswordToken WHERE user_id = ?1")
+    @Query("FROM PasswordToken p WHERE p.user.userId = ?1")
     PasswordToken findByUserId(Long userId);
 }

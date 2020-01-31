@@ -26,21 +26,21 @@ public class ImageController implements IImageController
 
     /**
      * Retrieve image from server.
-     * @param itemId The items images are retrieved.
+     * @param imageId (request parameter) ID of the items images are retrieved.
      * @return ResponseEntity containing the Resource (the image).
      */
     @GetMapping("/fetch-all")
     @ResponseBody
     @Override
-    public ResponseEntity<Resource> serveImage(@RequestParam Long itemId)
+    public ResponseEntity<Resource> serveImage(@RequestParam Long imageId)
     {
-        Resource files = imageService.serveImage(itemId);
+        Resource files = imageService.serveImage(imageId);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(files);
     }
 
     /**
      * Retrieve the thumbnail for the item.
-     * @param itemId Item for the thumbnail.
+     * @param itemId (request parameter) ID of the item for the thumbnail.
      * @return ResponseEntity containing the Resource (the image).
      */
     @GetMapping("/fetch-thumbnail")
@@ -53,36 +53,43 @@ public class ImageController implements IImageController
     }
 
     /**
-     * 
-     * @param file
-     * @param itemId
-     * @param principal
-     * @return
+     * Handles images that are being uploaded by the user.
+     * @param file (request parameter) upload file represented as a multipart file.
+     * @param itemId (request parameter) ID of the item the image is related to.
+     * @param isThumbnail (request parameter) is thumbnail?
+     * @param principal currently logged in user.
+     * @return HttpStatus
      */
     @PostMapping("/upload-image")
     @Override
     public HttpStatus handleImageUpload(@RequestParam("file") MultipartFile file, @RequestParam Long itemId,
-                                       Principal principal)
+                                        @RequestParam Boolean isThumbnail, Principal principal)
     {
-        imageService.storeImage(file, false, itemId,principal);
+        imageService.storeImage(file, isThumbnail, itemId,principal);
         return HttpStatus.CREATED;
     }
 
-    @PostMapping("/upload-thumbnail-image")
-    @Override
-    public HttpStatus handleThumbnailUpload(MultipartFile file, Long itemId, Principal principal)
-    {
-        imageService.storeThumbnail(file, itemId, principal);
-        return HttpStatus.CREATED;
-    }
-
+    /**
+     * Handles deletion of an image in the server.
+     * @param imageId (request parameter) ID of the image being deleted.
+     * @param isThumbnail (request parameter) is thumbnail?
+     * @param itemId (request parameter) ID of the item the image is related to.
+     * @param principal currently logged in user.
+     * @return HttpStatus
+     */
     @DeleteMapping("/delete-image")
     @Override
-    public HttpStatus handleDeletion(@RequestParam Long imageId, @RequestParam Long itemId, Principal principal)
+    public HttpStatus handleDeletion(@RequestParam Long imageId, @RequestParam Boolean isThumbnail,
+                                     @RequestParam Long itemId, Principal principal)
     {
-        return imageService.delete(imageId, itemId, principal);
+        return imageService.delete(imageId, isThumbnail, itemId, principal);
     }
 
+    /**
+     * ID of all the images related to the item.
+     * @param itemId (request parameter) ID of the item the images are related to.
+     * @return ReponseEntity containing a list of Long.
+     */
     @GetMapping("/relevant")
     @Override
     public ResponseEntity<List<Long>> relevantImages(@RequestParam Long itemId)
@@ -90,6 +97,11 @@ public class ImageController implements IImageController
         return new ResponseEntity<List<Long>>(imageService.relevantImages(itemId), HttpStatus.OK);
     }
 
+    /**
+     * Number of images the item possesses.
+     * @param itemId (request parameter) ID of the item.
+     * @return ResponseEntity containing an integer.
+     */
     @GetMapping("/user-amount")
     @Override
     public ResponseEntity<Integer> numberOfImages(Long itemId)

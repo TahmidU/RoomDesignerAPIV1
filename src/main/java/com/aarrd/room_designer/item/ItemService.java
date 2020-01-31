@@ -146,9 +146,15 @@ public class ItemService implements IItemService
     }
 
     @Override
-    public List<Object[]> fetchItemVariants(Long itemId)
+    public Long getVariantId(Long itemId)
     {
-        Item item = itemRepository.getOne(itemId);
+        return itemRepository.findVariantIdByItemId(itemId);
+    }
+
+    @Override
+    public List<Object[]> fetchItemVariants(Long itemVId)
+    {
+        Item item = itemRepository.getOne(itemVId);
         return itemRepository.findByVariantId(item.getItemVariant().getVariantId());
     }
 

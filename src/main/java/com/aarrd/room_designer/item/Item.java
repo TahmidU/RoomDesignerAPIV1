@@ -49,7 +49,7 @@ public class Item
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "variant_id", nullable = true)
+    @JoinColumn(name = "variant_id", nullable = false)
     private ItemVariant itemVariant;
 
     @ManyToOne

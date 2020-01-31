@@ -10,18 +10,22 @@ import java.util.Date;
 public class ItemDownloadService implements IItemDownloadService
 {
     private final IItemDownloadRepository itemDownloadRepository;
-    private final IItemRepository itemRepository;
 
     @Autowired
-    public ItemDownloadService(IItemDownloadRepository itemDownloadRepository, IItemRepository itemRepository)
+    public ItemDownloadService(IItemDownloadRepository itemDownloadRepository)
     {
         this.itemDownloadRepository = itemDownloadRepository;
-        this.itemRepository = itemRepository;
     }
 
+    /**
+     * Return the number of entries from the database for a specific item.
+     * @param itemId ID of the item.
+     * @return Integer.
+     */
     @Override
     public Integer getDownloadsAggregate(Long itemId)
     {
+        System.out.println("ItemDownloadService :: Returning number of download for " + itemId);
         return (itemDownloadRepository.findByItemId(itemId)).size();
     }
 }

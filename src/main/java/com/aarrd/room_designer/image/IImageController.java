@@ -12,11 +12,12 @@ import java.util.List;
 
 public interface IImageController
 {
-    ResponseEntity<Resource> serveImage(@RequestParam Long itemId);
+    ResponseEntity<Resource> serveImage(@RequestParam Long imageId);
     ResponseEntity<Resource> serveThumbnail(@RequestParam Long itemId);
-    HttpStatus handleImageUpload(@RequestParam("file") MultipartFile file, @RequestParam Long itemId, Principal principal);
-    HttpStatus handleThumbnailUpload(@RequestParam("file") MultipartFile file, @RequestParam Long itemId, Principal principal);
-    HttpStatus handleDeletion(@RequestParam Long imageId, @RequestParam Long itemId, Principal principal);
+    HttpStatus handleImageUpload(@RequestParam("file") MultipartFile file, @RequestParam Long itemId,
+                                 @RequestParam Boolean isThumbnail, Principal principal);
+    HttpStatus handleDeletion(@RequestParam Long imageId, @RequestParam Boolean isThumbnail, @RequestParam Long itemId,
+                              Principal principal);
     ResponseEntity<List<Long>> relevantImages(@RequestParam Long itemId);
     ResponseEntity<Integer> numberOfImages(@RequestParam Long itemId);
     ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc);

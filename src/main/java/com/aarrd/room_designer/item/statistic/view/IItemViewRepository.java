@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface IItemViewRepository extends JpaRepository<ItemView, Long>
 {
-    @Query("FROM ItemView WHERE itemId = ?1")
+    @Query("FROM ItemView i WHERE i.item.itemId = ?1")
     List<ItemView> findByItemId(Long itemId);
 }

@@ -9,9 +9,15 @@ import java.util.List;
 @Repository
 public interface IImageRepository extends JpaRepository<Image, Long>
 {
-    @Query("FROM Image WHERE item_Id = ?1")
-    List<Image> findByItemId(Long itemId);
+    @Query("SELECT i.imageId FROM Image i WHERE i.item.itemId = ?1")
+    List<Long> findImageIdByItemId(Long itemId);
 
-    @Query("SELECT imageDirectory FROM Image WHERE itemId = ?1 AND isThumbnail = 1")
-    String findDirByItemId(Long itemId);
+    @Query("SELECT i.imageDirectory FROM Image i WHERE i.imageId = ?1 AND i.isThumbnail = 0")
+    String findDirByImageId(Long imageId);
+
+    @Query("FROM Image i WHERE i.item.itemId = ?1 AND i.isThumbnail = 1")
+    Image findThumbnailImage(Long itemId);
+
+    @Query("SELECT i.imageDirectory FROM Image i WHERE i.item.itemId = ?1 AND i.isThumbnail = 1")
+    String findDirByItemIdAndThumbnail(Long itemId);
 }

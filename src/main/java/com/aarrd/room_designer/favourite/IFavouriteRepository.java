@@ -9,9 +9,9 @@ import java.util.List;
 @Repository
 public interface IFavouriteRepository extends JpaRepository<Favourite, Long>
 {
-    @Query("FROM Favourite WHERE user_id = ?1 AND item_id = ?2")
+    @Query("FROM Favourite f WHERE f.user.userId = ?1 AND f.item.itemId = ?2")
     Favourite findByUserIdAndItemId(Long userId, Long itemId);
 
-    @Query("FROM Favourite WHERE user_id = ?1")
+    @Query("FROM Favourite f WHERE f.user.userId = ?1")
     List<Favourite> findByUserId(Long userId);
 }

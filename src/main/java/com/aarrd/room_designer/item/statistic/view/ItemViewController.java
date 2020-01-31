@@ -5,10 +5,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/item-view")
@@ -22,17 +19,26 @@ public class ItemViewController implements IItemViewController
         this.itemViewService = itemViewService;
     }
 
+    /**
+     * Increment the number of views for an item.
+     * @param itemId (request parameter) ID of the item.
+     * @return HttpStatus.
+     */
     @Override
     @PostMapping(value = "/increment")
-    public HttpStatus incrementView(Long itemId) {
+    public HttpStatus incrementView(@RequestParam Long itemId) {
         itemViewService.incrementView(itemId);
         return HttpStatus.OK;
     }
 
-
+    /**
+     * Retrieve the number of views for an item.
+     * @param itemId (request parameter) ID of the item.
+     * @return ResponseEntity containing an integer.
+     */
     @Override
     @GetMapping(value = "/get-views")
-    public ResponseEntity<Integer> getViews(Long itemId) {
+    public ResponseEntity<Integer> getViews(@RequestParam Long itemId) {
         return new ResponseEntity<>(itemViewService.getViews(itemId),HttpStatus.OK);
     }
 }

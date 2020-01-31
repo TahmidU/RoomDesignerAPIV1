@@ -42,6 +42,7 @@ public class FavouriteService implements IFavouriteService
         if(user == null)
             throw new FavouriteException("User not found");
 
+        System.out.println("FavouriteService :: " + principal.getName() + " favourited " + itemId);
         favouriteRepository.save(new Favourite(new Date(), user, item));
     }
 
@@ -58,6 +59,7 @@ public class FavouriteService implements IFavouriteService
         if(user == null)
             throw new FavouriteException("User not found");
 
+        System.out.println("FavouriteService :: " + principal.getName() + " unfavourited " + itemId);
         favouriteRepository.delete(favouriteRepository.findByUserIdAndItemId(user.getUserId(), itemId));
     }
 
@@ -69,6 +71,8 @@ public class FavouriteService implements IFavouriteService
     @Override
     public List<Long> fetchFavourited(Principal principal)
     {
+        System.out.println("FavouriteService :: Fetching favourites for " + principal.getName());
+
         List<Favourite> favourites =
                 favouriteRepository.findByUserId(userRepository.findByEmail(principal.getName()).getUserId());
 
@@ -88,6 +92,7 @@ public class FavouriteService implements IFavouriteService
     @Override
     public Boolean fetchItemFavourited(Principal principal, Long itemId)
     {
+        System.out.println("FavouriteService :: Checking favourited between: " + principal.getName() + " and " + itemId);
         Long userId = userRepository.findByEmail(principal.getName()).getUserId();
         if(favouriteRepository.findByUserIdAndItemId(userId,itemId) != null)
             return true;

@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface IItemDownloadRepository extends JpaRepository<ItemDownload, Long>
 {
-    @Query("FROM ItemDownload WHERE itemId = ?1")
+    @Query("FROM ItemDownload i WHERE i.item.itemId = ?1")
     List<ItemDownload> findByItemId(Long itemId);
 }

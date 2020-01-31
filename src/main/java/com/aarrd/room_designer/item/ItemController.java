@@ -20,6 +20,14 @@ public class ItemController implements IItemController
         this.itemService = itemService;
     }
 
+    /**
+     * Add item.
+     * @param item (request body) item.
+     * @param principal user currently logged in.
+     * @param catName (request parameter) category name.
+     * @param typeName (request parameter) type name.
+     * @return HttpStatus.
+     */
     @PostMapping(value = "/add")
     @Override
     public HttpStatus addItem(@RequestBody Item item, Principal principal, @RequestParam String catName,
@@ -29,6 +37,11 @@ public class ItemController implements IItemController
         return HttpStatus.OK;
     }
 
+    /**
+     * Fetch single item.
+     * @param itemId (request parameter) ID of the item.
+     * @return ResponseEntity.
+     */
     @GetMapping(value = "/fetch-item")
     @Override
     public ResponseEntity<?> fetchItem(@RequestParam Long itemId)
@@ -36,6 +49,11 @@ public class ItemController implements IItemController
         return new ResponseEntity<>(itemService.fetchItem(itemId), HttpStatus.OK);
     }
 
+    /**
+     * Fetch the users (using the userId) items.
+     * @param userId (request parameter) ID of the user.
+     * @return ResponseEntity.
+     */
     @GetMapping(value = "/fetch-items-userid")
     @Override
     public ResponseEntity<?> fetchItemsByUserId(@RequestParam Long userId)
@@ -43,6 +61,12 @@ public class ItemController implements IItemController
         return new ResponseEntity<>(itemService.fetchUserItems(userId), HttpStatus.OK);
     }
 
+    /**
+     * Fetch items based on category. Paged to prevent retrieving all items at once.
+     * @param catName (request parameter) category name.
+     * @param pageNum (request parameter) page number.
+     * @return ResponseEntity.
+     */
     @GetMapping(value = "/fetch-by-cat")
     @Override
     public ResponseEntity<?> fetchItemByCategory(@RequestParam String catName, @RequestParam Integer pageNum)
@@ -50,6 +74,11 @@ public class ItemController implements IItemController
         return new ResponseEntity<>(itemService.fetchItemsByCat(catName, pageNum), HttpStatus.OK);
     }
 
+    /**
+     * Removed Item.
+     * @param id (request parameter) ID of the item.
+     * @return HttpStatus.
+     */
     @PostMapping(value = "/remove")
     @Override
     public HttpStatus removeItem(@RequestParam Long id)
@@ -58,6 +87,11 @@ public class ItemController implements IItemController
         return HttpStatus.OK;
     }
 
+    /**
+     * Edit item.
+     * @param modItem (request body) Item.
+     * @return HttpStatus.
+     */
     @PutMapping(value = "/update")
     @Override
     public HttpStatus modifyItem(@RequestBody Item modItem)
@@ -66,6 +100,12 @@ public class ItemController implements IItemController
         return HttpStatus.OK;
     }
 
+    /**
+     * Change the items category.
+     * @param itemId (request parameter) ID of the item.
+     * @param name (request parameter) name of the category.
+     * @return HttpStatus.
+     */
     @PutMapping(value = "/change-cat")
     @Override
     public HttpStatus changeCategory(@RequestParam Long itemId, @RequestParam String name)
@@ -74,6 +114,12 @@ public class ItemController implements IItemController
         return HttpStatus.OK;
     }
 
+    /**
+     * Change the items type.
+     * @param itemId (request parameter) ID of the item.
+     * @param name (request parameter) name of the type.
+     * @return HttpStatus.
+     */
     @PutMapping(value = "/change-type")
     @Override
     public HttpStatus changeType(@RequestParam Long itemId, @RequestParam String name)
@@ -82,6 +128,11 @@ public class ItemController implements IItemController
         return HttpStatus.OK;
     }
 
+    /**
+     * Merge the variant id of the items.
+     * @param itemIds (request parameter) List of item IDs.
+     * @return HttpStatus.
+     */
     @PutMapping(value = "/merge-var")
     @Override
     public HttpStatus mergeVariants(@RequestParam List<Long> itemIds)
@@ -90,6 +141,11 @@ public class ItemController implements IItemController
         return HttpStatus.OK;
     }
 
+    /**
+     * Separate the variant id of the items.
+     * @param itemIds (request parameter) List of item IDs.
+     * @return HttpStatus.
+     */
     @PutMapping(value = "/separate-var")
     @Override
     public HttpStatus separateVariants(@RequestParam List<Long> itemIds)
@@ -98,16 +154,38 @@ public class ItemController implements IItemController
         return HttpStatus.OK;
     }
 
-    @GetMapping(value = "/fetch-variants")
+    /**
+     * Get the items variant Id.
+     * @param itemId (request parameter) ID of the item.
+     * @return ResponseEntity containing long.
+     */
+    @GetMapping(value = "/get-var-id")
     @Override
-    public ResponseEntity<?> fetchItemVariant(@RequestParam Long itemId)
+    public ResponseEntity<Long> getVariantId(@RequestParam Long itemId)
     {
-        return new ResponseEntity<>(itemService.fetchItemVariants(itemId), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.getVariantId(itemId), HttpStatus.OK);
     }
 
+    /**
+     * Fetch items by item variant id.
+     * @param itemVId (request parameter) item variant ids
+     * @return ResponseEntity.
+     */
+    @GetMapping(value = "/fetch-variants")
+    @Override
+    public ResponseEntity<?> fetchItemVariant(@RequestParam Long itemVId)
+    {
+        return new ResponseEntity<>(itemService.fetchItemVariants(itemVId), HttpStatus.OK);
+    }
+
+    /**
+     * Fetch all items. Paged to prevent retrieving all items at once.
+     * @param pageNum (request parameter) page number.
+     * @return ResponseEntity.
+     */
     @GetMapping(value = "/fetch-all")
     @Override
-    public ResponseEntity<List<Object[]>> fetchItems(@RequestParam Integer pageNum)
+    public ResponseEntity<?> fetchItems(@RequestParam Integer pageNum)
     {
         return new ResponseEntity<>(itemService.fetchItems(pageNum), HttpStatus.OK);
     }

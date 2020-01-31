@@ -18,7 +18,8 @@ public interface IItemService
     void changeType(Long itemId, String name);
     void mergeVariants(List<Long> itemIds);
     void separateVariants(List<Long> itemIds);
-    List<Object[]> fetchItemVariants(Long itemId);
+    Long getVariantId(Long itemId);
+    List<Object[]> fetchItemVariants(Long itemVId);
     User getUser(Long itemId);
     List<Object[]> fetchItems(Integer pageNum);
 }

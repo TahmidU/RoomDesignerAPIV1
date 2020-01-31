@@ -8,6 +8,6 @@ public interface IVerificationTokenRepository extends JpaRepository<Verification
 {
     VerificationToken findByToken(int token);
 
-    @Query("FROM VerificationToken WHERE user_id = ?1")
+    @Query("FROM VerificationToken v WHERE v.user.userId = ?1")
     VerificationToken findByUser(Long userId);
 }

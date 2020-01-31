@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IModelRepository extends JpaRepository<Model, Long>
 {
-    @Query("FROM Model WHERE item_Id = ?1")
+    @Query("FROM Model m WHERE m.item.itemId = ?1")
     Model findByItemId(Long itemId);
 }

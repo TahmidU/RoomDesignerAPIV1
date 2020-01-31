@@ -52,6 +52,13 @@ public class ImageService implements IImageService
         permissibleTypes.add("image/png");
     }
 
+    /**
+     * Handles images that are being uploaded by the user.
+     * @param file upload file represented as a multipart file.
+     * @param isThumbnail is thumbnail?
+     * @param itemId ID of the item the image is related to.
+     * @param principal currently logged in user.
+     */
     @Override
     public void storeImage(MultipartFile file, Boolean isThumbnail, Long itemId, Principal principal)
     {
@@ -76,50 +83,81 @@ public class ImageService implements IImageService
         imageRepository.save(new Image(new Date(), directory, isThumbnail, item));
     }
 
-    @Override
-    public void storeThumbnail(MultipartFile file, Long itemId, Principal principal)
-    {
-        storeImage(file, true, itemId, principal);
-    }
-
+    /**
+     * Serve the image to the client.
+     * @param imageId ID of the image being served.
+     * @return Resource (the image).
+     */
     @Override
     public Resource serveImage(Long imageId)
     {
-        String directory = imageRepository.getOne(imageId).getImageDirectory();
+        String directory = imageRepository.findDirByImageId(imageId);
         System.out.println("ImageService :: Serving " + directory);
         return storageService.loadResource(directory);
     }
 
+    /**
+     * Server thumbnail to the client.
+     * @param itemId ID of the thumbnails item.
+     * @return Resource (the image).
+     */
     @Override
     public Resource serveThumbnail(Long itemId)
     {
-        return storageService.loadResource(imageRepository.findDirByItemId(itemId));
+        String directory = imageRepository.findDirByItemIdAndThumbnail(itemId);
+        System.out.println("ImageService :: Serving " + directory);
+        return storageService.loadResource(directory);
     }
 
+    /**
+     * Delete image from server.
+     * @param imageId Id of the image to be deleted. If the image is a thumbnail this is redundant.
+     * @param isThumbnail is Thumbnail?
+     * @param itemId Id of the item the image is associated with.
+     * @param principal currently logged in user.
+     * @return HttpStatus.
+     */
     @Override
-    public HttpStatus delete(Long imageId, Long itemId, Principal principal)
+    public HttpStatus delete(Long imageId, Boolean isThumbnail, Long itemId, Principal principal)
     {
         User user = itemRepository.getOne(itemId).getUser();
         if(!(user.getEmail()).equals(principal.getName()))
             return HttpStatus.UNAUTHORIZED;
 
-        storageService.delete(imageRepository.getOne(imageId).getImageDirectory());
-        imageRepository.delete(imageRepository.getOne(imageId));
+        //If its a thumbnail the imageId is not used and becomes redundant.
+        Image image;
+        if(!isThumbnail)
+            image = imageRepository.getOne(imageId); // normal image...
+        else
+            image = imageRepository.findThumbnailImage(itemId); //Thumbnail...
+
+        System.out.println("ImageService :: Deleting " + image.getImageDirectory());
+        storageService.delete(image.getImageDirectory());
+        imageRepository.delete(image);
         return HttpStatus.OK;
     }
 
+    /**
+     * Retrieve all image ids associated with item.
+     * @param itemId Id of the item.
+     * @return List of longs (image ids).
+     */
     @Override
     public List<Long> relevantImages(Long itemId)
     {
-        List<Long> imageIds = new ArrayList<>();
-        for (Image i : imageRepository.findByItemId(itemId))
-            imageIds.add(i.getImageId());
-        return imageIds;
+        System.out.println("ImageService :: Retrieving relevant images for " + itemId);
+        return new ArrayList<>(imageRepository.findImageIdByItemId(itemId));
     }
 
+    /**
+     * Retrieve the number of images related to item.
+     * @param itemId Id of the item.
+     * @return Integer.
+     */
     @Override
     public Integer numberOfImages(Long itemId)
     {
-        return imageRepository.findByItemId(itemId).size();
+        System.out.println("ImageService :: Retrieving num of images for " + itemId);
+        return imageRepository.findImageIdByItemId(itemId).size();
     }
 }

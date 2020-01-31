@@ -21,8 +21,8 @@ public class FavouriteController implements IFavouriteController
 
     /**
      * Users favourited item saved into the database.
-     * @param principal Currently logged in user.
-     * @param itemId (Request Parameter) Item that was favourited by the user.
+     * @param principal currently logged in user.
+     * @param itemId (request parameter) item that was favourited by the user.
      * @return HttpStatus.
      */
     @PostMapping(value = "/add")
@@ -35,8 +35,8 @@ public class FavouriteController implements IFavouriteController
 
     /**
      * Item unfavourited by the user.
-     * @param principal Currently logged in user.
-     * @param itemId (Request Parameter) Item that was unfavourited by the user.
+     * @param principal currently logged in user.
+     * @param itemId (request parameter) item that was unfavourited by the user.
      * @return HttpStatus.
      */
     @DeleteMapping(value = "/remove")
@@ -49,7 +49,7 @@ public class FavouriteController implements IFavouriteController
 
     /**
      * All items that were favourited by the user.
-     * @param principal Currently logged in user.
+     * @param principal currently logged in user.
      * @return ResponseEntity containing a list of favouritedIds.
      */
     @GetMapping(value = "/fetch")
@@ -60,8 +60,8 @@ public class FavouriteController implements IFavouriteController
 
     /**
      * Is the item favourited?
-     * @param principal Currently logged in user.
-     * @param itemId Item that is checked.
+     * @param principal currently logged in user.
+     * @param itemId (request param) item that is checked.
      * @return ResponseEntity containing a boolean.
      */
     @GetMapping(value = "fetch-item")
