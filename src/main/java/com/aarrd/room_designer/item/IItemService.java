@@ -2,6 +2,7 @@ package com.aarrd.room_designer.item;
 
 import com.aarrd.room_designer.item.variant.ItemVariant;
 import com.aarrd.room_designer.user.User;
+import org.springframework.data.domain.Page;
 
 import java.security.Principal;
 import java.util.List;
@@ -21,5 +22,5 @@ public interface IItemService
     Long getVariantId(Long itemId);
     List<Object[]> fetchItemVariants(Long itemId);
     User getUser(Long itemId);
-    List<Object[]> fetchItems(Integer pageNum);
+    Page<Item> fetchItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel);
 }

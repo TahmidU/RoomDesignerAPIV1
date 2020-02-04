@@ -1,5 +1,6 @@
 package com.aarrd.room_designer.item;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -7,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 @Repository
 public interface IItemRepository extends JpaRepository<Item, Long>
@@ -21,7 +23,7 @@ public interface IItemRepository extends JpaRepository<Item, Long>
     List<Object[]> findByUserId(Long userId);
 
     @Query("SELECT i.itemId, i.name, i.description, i.date FROM Item i")
-    List<Object[]> findAllItems(Pageable pageable);
+    List<Object[]> findAllItems(Pageable pageable, Example example);
 
     @Query("SELECT i.itemId, i.name, i.description, i.date FROM Item i WHERE i.category.name = ?1")
     List<Object[]> findByCategory(String catName, Pageable pageable);

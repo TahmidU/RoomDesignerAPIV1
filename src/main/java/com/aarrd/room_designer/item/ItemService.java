@@ -7,6 +7,8 @@ import com.aarrd.room_designer.item.variant.ItemVariant;
 import com.aarrd.room_designer.user.IUserRepository;
 import com.aarrd.room_designer.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -23,17 +25,19 @@ public class ItemService implements IItemService
     private final ICategoryRepository categoryRepository;
     private final ITypeRepository typeRepository;
     private final IItemVariantRepository itemVariantRepository;
-
+    private final IEnhancedItemRepository enhancedItemRepository;
 
     @Autowired
     public ItemService(IItemRepository itemRepository, IItemVariantRepository itemVariantRepository,
-                       ICategoryRepository categoryRepository, ITypeRepository typeRepository, IUserRepository userRepository)
+                       ICategoryRepository categoryRepository, ITypeRepository typeRepository,
+                       IUserRepository userRepository, IEnhancedItemRepository enhancedItemRepository)
     {
         this.itemRepository = itemRepository;
         this.itemVariantRepository = itemVariantRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.typeRepository = typeRepository;
+        this.enhancedItemRepository = enhancedItemRepository;
     }
 
     /**
@@ -229,15 +233,21 @@ public class ItemService implements IItemService
     }
 
     /**
-     * Fetch all item. Paged to prevent retrieval of items all at once.
+     * Fetch all items from the database. Paged to prevent retrieving all items at once.
      * @param pageNum page number.
-     * @return List of objects.
+     * @param itemName name of the item (does not have to be exact).
+     * @param catId ID of the category.
+     * @param typeId ID of the type.
+     * @param hasModel if the item has a model.
+     * @return Page of items.
      */
     @Override
-    public List<Object[]> fetchItems(Integer pageNum)
+    public Page<Item> fetchItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel)
     {
-        return itemRepository.findAllItems(PageRequest.of(pageNum, 9,
-                Sort.by(Sort.Direction.ASC, "date")));
+        System.out.println("ItemService :: fetching with criterion (pageNum, itemName, catName, typeName, hasModel): "
+                + pageNum + "," + itemName + "," + catId + "," + typeId + "," + hasModel);
+
+        return enhancedItemRepository.findAllItems(pageNum,itemName,catId,typeId,hasModel);
     }
 
     /**

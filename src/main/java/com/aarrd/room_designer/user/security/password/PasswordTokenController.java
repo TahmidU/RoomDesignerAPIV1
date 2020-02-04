@@ -1,5 +1,6 @@
 package com.aarrd.room_designer.user.security.password;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ public class PasswordTokenController implements IPasswordTokenController
 {
     private final IPasswordTokenService passwordTokenService;
 
+    @Autowired
     public PasswordTokenController(IPasswordTokenService passwordTokenService) {
         this.passwordTokenService = passwordTokenService;
     }

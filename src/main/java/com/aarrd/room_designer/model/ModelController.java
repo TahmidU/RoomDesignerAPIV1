@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.security.Principal;
 
 @RestController
-@RequestMapping(value = "/models")
+@RequestMapping(value = "/model")
 public class ModelController implements IModelController
 {
     private final ModelService modelService;
@@ -61,7 +61,7 @@ public class ModelController implements IModelController
      * @param principal currently logged in user.
      * @return HttpStatus.
      */
-    @DeleteMapping("/delete")
+    @DeleteMapping("/remove")
     @Override
     public HttpStatus handleDeletion(@RequestParam Long modelId, @RequestParam Long itemId, Principal principal)
     {
@@ -85,7 +85,7 @@ public class ModelController implements IModelController
      * @param itemId (request parameter) ID of the item.
      * @return ResponseEntity containg a boolean.
      */
-    @GetMapping("/model-exists")
+    @GetMapping("/exists")
     @Override
     public ResponseEntity<Boolean> modelExists(Long itemId)
     {

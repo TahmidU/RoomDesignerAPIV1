@@ -79,7 +79,7 @@ public class ItemController implements IItemController
      * @param id (request parameter) ID of the item.
      * @return HttpStatus.
      */
-    @PostMapping(value = "/remove")
+    @DeleteMapping(value = "/remove")
     @Override
     public HttpStatus removeItem(@RequestParam Long id)
     {
@@ -179,14 +179,22 @@ public class ItemController implements IItemController
     }
 
     /**
-     * Fetch all items. Paged to prevent retrieving all items at once.
-     * @param pageNum (request parameter) page number.
-     * @return ResponseEntity.
+     * Fetch all items from the database. Paged to prevent retrieving all items at once.
+     * @param pageNum (required parameter) page number.
+     * @param itemName (request parameter optional) name of the item (does not have to be exact).
+     * @param catId  (request parameter optional) ID of the category.
+     * @param typeId  (request parameter optional) ID of the type.
+     * @param hasModel (request parameter optional) if the item has a model.
+     * @return ResponseEntity containing Page of items.
      */
     @GetMapping(value = "/fetch-all")
     @Override
-    public ResponseEntity<?> fetchItems(@RequestParam Integer pageNum)
+    public ResponseEntity<?> fetchItems(@RequestParam Integer pageNum, @RequestParam (required = false) String itemName,
+                                        @RequestParam(required = false) Integer catId,
+                                        @RequestParam(required = false) Integer typeId,
+                                        @RequestParam(required = false) Boolean hasModel)
     {
-        return new ResponseEntity<>(itemService.fetchItems(pageNum), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.fetchItems(pageNum, itemName, catId, typeId, hasModel),
+                HttpStatus.OK);
     }
 }

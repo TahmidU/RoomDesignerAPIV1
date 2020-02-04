@@ -32,6 +32,9 @@ public class Item
     @Column(name = "description", length = 1000)
     private String description;
 
+    @Column(name = "has_model", nullable = false, columnDefinition = "BIT", length = 1)
+    private Boolean hasModel;
+
     @Temporal(TemporalType.DATE)
     @Column(name = "date", nullable = false)
     private Date date;
@@ -74,25 +77,29 @@ public class Item
 
     public Item(){}
 
-    public Item(String name, String description, Date date)
+    public Item(String name, String description, Date date, Boolean hasModel)
     {
         this.name = name;
         this.description = description;
         this.date = date;
+        this.hasModel = hasModel;
     }
 
-    public Item(Long itemId, String name, String description, Date date) {
+    public Item(Long itemId, String name, String description, Date date, Boolean hasModel) {
         this.itemId = itemId;
         this.name = name;
         this.description = description;
         this.date = date;
+        this.hasModel = hasModel;
     }
 
-    public Item(String name, String description, Date date, User user, Category category, ItemVariant itemVariant, Type type)
+    public Item(String name, String description, Date date, Boolean hasModel, User user, Category category,
+                ItemVariant itemVariant, Type type)
     {
         this.name = name;
         this.description = description;
         this.date = date;
+        this.hasModel = hasModel;
         this.user = user;
         this.category = category;
         this.itemVariant = itemVariant;

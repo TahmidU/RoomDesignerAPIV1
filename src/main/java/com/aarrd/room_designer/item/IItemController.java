@@ -24,5 +24,6 @@ public interface IItemController
     HttpStatus separateVariants(@RequestParam List<Long> itemIds);
     ResponseEntity<Long> getVariantId(@RequestParam Long itemId);
     ResponseEntity<?> fetchItemVariant(@RequestParam Long itemId);
-    ResponseEntity<?> fetchItems(@RequestParam Integer pageNum);
+    ResponseEntity<?> fetchItems(@RequestParam Integer pageNum,@RequestParam String itemName,@RequestParam Integer catId,
+                                 @RequestParam Integer typeId,@RequestParam Boolean hasModel);
 }
