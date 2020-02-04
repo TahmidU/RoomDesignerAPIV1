@@ -81,19 +81,6 @@ public class ItemService implements IItemService
     }
 
     /**
-     * Fetch all items with the category criterion. Paged to prevent retrieving all items at once.
-     * @param catName category name.
-     * @param pageNum page number.
-     * @return List of objects.
-     */
-    @Override
-    public List<Object[]> fetchItemsByCat(String catName, Integer pageNum)
-    {
-        return itemRepository.findByCategory(catName, PageRequest.of(pageNum, 9,
-                Sort.by(Sort.Direction.ASC, "date")));
-    }
-
-    /**
      * Remove item from database.
      * @param itemId ID of item
      */

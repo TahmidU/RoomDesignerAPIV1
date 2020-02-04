@@ -15,7 +15,6 @@ public interface IItemController
                        @RequestParam String typeName);
     ResponseEntity<?> fetchItem(@RequestParam Long itemId);
     ResponseEntity<?> fetchItemsByUserId(@RequestParam Long userId);
-    ResponseEntity<?> fetchItemByCategory(@RequestParam String catName, @RequestParam Integer pageNum);
     HttpStatus removeItem(@RequestParam Long id);
     HttpStatus modifyItem(@RequestBody Item modItem);
     HttpStatus changeCategory(@RequestParam Long itemId, @RequestParam String name);

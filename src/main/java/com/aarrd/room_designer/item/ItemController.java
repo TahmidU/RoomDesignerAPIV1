@@ -62,19 +62,6 @@ public class ItemController implements IItemController
     }
 
     /**
-     * Fetch items based on category. Paged to prevent retrieving all items at once.
-     * @param catName (request parameter) category name.
-     * @param pageNum (request parameter) page number.
-     * @return ResponseEntity.
-     */
-    @GetMapping(value = "/fetch-by-cat")
-    @Override
-    public ResponseEntity<?> fetchItemByCategory(@RequestParam String catName, @RequestParam Integer pageNum)
-    {
-        return new ResponseEntity<>(itemService.fetchItemsByCat(catName, pageNum), HttpStatus.OK);
-    }
-
-    /**
      * Removed Item.
      * @param id (request parameter) ID of the item.
      * @return HttpStatus.

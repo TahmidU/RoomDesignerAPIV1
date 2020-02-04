@@ -12,7 +12,6 @@ public interface IItemService
     void addItem(Item item, Principal principal, String catName, String typeName);
     Object fetchItem(Long itemId);
     List<Object[]> fetchUserItems(Long userId);
-    List<Object[]> fetchItemsByCat(String catName, Integer pageNum);
     void removeItem(Long itemId);
     void modifyItem(Item modItem);
     void changeCategory(Long itemId, String name);
