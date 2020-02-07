@@ -13,21 +13,12 @@ import java.util.function.Predicate;
 @Repository
 public interface IItemRepository extends JpaRepository<Item, Long>
 {
-    @Query("SELECT i.itemId, i.name, i.description, i.date FROM Item i WHERE i.itemId = ?1")
-    Object findByItemId(Long itemId);
+    @Query("FROM Item i WHERE i.itemId = ?1")
+    Item findByItemId(Long itemId);
 
-    @Query("SELECT i.itemId, i.name, i.description, i.date FROM Item i WHERE i.itemVariant.variantId = ?1")
-    List<Object[]> findByVariantId(Long variantId);
+    @Query("FROM Item i WHERE i.itemVariant.variantId = ?1")
+    List<Item> findByVariantId(Long variantId);
 
-    @Query("SELECT i.itemId, i.name, i.description, i.date FROM Item i WHERE i.user.userId = ?1")
-    List<Object[]> findByUserId(Long userId);
-
-    @Query("SELECT i.itemId, i.name, i.description, i.date FROM Item i")
-    List<Object[]> findAllItems(Pageable pageable, Example example);
-
-    @Query("SELECT i.itemId, i.name, i.description, i.date FROM Item i WHERE i.category.name = ?1")
-    List<Object[]> findByCategory(String catName, Pageable pageable);
-
-    @Query("SELECT i.itemVariant.variantId FROM Item i WHERE i.itemId = ?1")
+    @Query("FROM Item i WHERE i.itemId = ?1")
     Long findVariantIdByItemId(Long itemId);
 }

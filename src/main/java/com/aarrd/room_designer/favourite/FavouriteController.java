@@ -48,17 +48,6 @@ public class FavouriteController implements IFavouriteController
     }
 
     /**
-     * All items that were favourited by the user.
-     * @param principal currently logged in user.
-     * @return ResponseEntity containing a list of favouritedIds.
-     */
-    @GetMapping(value = "/fetch")
-    @Override
-    public ResponseEntity<List<Long>> fetchFavourited(Principal principal) {
-        return new ResponseEntity<>(favouriteService.fetchFavourited(principal), HttpStatus.OK);
-    }
-
-    /**
      * Is the item favourited?
      * @param principal currently logged in user.
      * @param itemId (request param) item that is checked.

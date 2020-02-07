@@ -5,6 +5,7 @@ import com.aarrd.room_designer.item.Item;
 import com.aarrd.room_designer.user.IUserRepository;
 import com.aarrd.room_designer.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -61,26 +62,6 @@ public class FavouriteService implements IFavouriteService
 
         System.out.println("FavouriteService :: " + principal.getName() + " unfavourited " + itemId);
         favouriteRepository.delete(favouriteRepository.findByUserIdAndItemId(user.getUserId(), itemId));
-    }
-
-    /**
-     * All items that were favourited by the user.
-     * @param principal Currently logged in user.
-     * @return
-     */
-    @Override
-    public List<Long> fetchFavourited(Principal principal)
-    {
-        System.out.println("FavouriteService :: Fetching favourites for " + principal.getName());
-
-        List<Favourite> favourites =
-                favouriteRepository.findByUserId(userRepository.findByEmail(principal.getName()).getUserId());
-
-        List<Long> favouriteIds = new ArrayList<>();
-        for(Favourite f : favourites)
-            favouriteIds.add(f.getFavouriteId());
-
-        return favouriteIds;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.aarrd.room_designer.item;
 
+import com.aarrd.room_designer.favourite.Favourite;
 import com.aarrd.room_designer.item.category.ICategoryRepository;
 import com.aarrd.room_designer.item.type.ITypeRepository;
 import com.aarrd.room_designer.item.variant.IItemVariantRepository;
@@ -7,10 +8,7 @@ import com.aarrd.room_designer.item.variant.ItemVariant;
 import com.aarrd.room_designer.user.IUserRepository;
 import com.aarrd.room_designer.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -64,33 +62,93 @@ public class ItemService implements IItemService
      * @return Object.
      */
     @Override
-    public Object fetchItem(Long itemId)
+    public Item fetchItem(Long itemId)
     {
         return itemRepository.findByItemId(itemId);
     }
 
     /**
-     * Fetch users uploaded items.
+     * Fetch all items from the database. Paged to prevent retrieving all items at once.
+     * @param pageNum page number.
+     * @param itemName name of the item (does not have to be exact).
+     * @param catId ID of the category.
+     * @param typeId ID of the type.
+     * @param hasModel if the item has a model.
      * @param userId ID of the user.
+     * @return Page of items.
+     */
+    @Override
+    public Page<Item> fetchUserItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel,
+                                     Long userId)
+    {
+        return enhancedItemRepository.findAllUserItems(pageNum, itemName, catId, typeId, hasModel, userId);
+    }
+
+
+    /**
+     * Fetch all the variants of the item.
+     * @param itemId ID of the item.
      * @return List of objects.
      */
     @Override
-    public List<Object[]> fetchUserItems(Long userId)
+    public List<Item> fetchItemVariants(Long itemId)
     {
-        return itemRepository.findByUserId(userId);
+        Item item = itemRepository.getOne(itemId);
+        return itemRepository.findByVariantId(item.getItemVariant().getVariantId());
     }
 
     /**
-     * Fetch all items with the category criterion. Paged to prevent retrieving all items at once.
-     * @param catName category name.
+     * Fetch all items from the database. Paged to prevent retrieving all items at once.
      * @param pageNum page number.
-     * @return List of objects.
+     * @param itemName name of the item (does not have to be exact).
+     * @param catId ID of the category.
+     * @param typeId ID of the type.
+     * @param hasModel if the item has a model.
+     * @return Page of items.
      */
     @Override
-    public List<Object[]> fetchItemsByCat(String catName, Integer pageNum)
+    public Page<Item> fetchItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel)
     {
-        return itemRepository.findByCategory(catName, PageRequest.of(pageNum, 9,
-                Sort.by(Sort.Direction.ASC, "date")));
+        System.out.println("ItemService :: fetching with criterion (pageNum, itemName, catName, typeName, hasModel): "
+                + pageNum + "," + itemName + "," + catId + "," + typeId + "," + hasModel);
+
+        return enhancedItemRepository.findAllItems(pageNum,itemName,catId,typeId,hasModel);
+    }
+
+    /**
+     * Fetch all users items.
+     * @param principal Currently logged in user.
+     * @param pageNum (required parameter) page number.
+     * @param itemName (request parameter optional) name of the item (does not have to be exact).
+     * @param catId  (request parameter optional) ID of the category.
+     * @param typeId  (request parameter optional) ID of the type.
+     * @param hasModel (request parameter optional) if the item has a model.
+     * @return Page of items.
+     */
+    @Override
+    public Page<Item> fetchUserItems(Principal principal, Integer pageNum, String itemName, Integer catId,
+                                           Integer typeId, Boolean hasModel)
+    {
+        User user = userRepository.findByEmail(principal.getName());
+        return enhancedItemRepository.findAllUserItems(pageNum, itemName, catId, typeId, hasModel, user.getUserId());
+    }
+
+    /**
+     * Fetch all items the user has favourited.
+     * @param principal Currently logged in user.
+     * @param pageNum (required parameter) page number.
+     * @param itemName (request parameter optional) name of the item (does not have to be exact).
+     * @param catId  (request parameter optional) ID of the category.
+     * @param typeId  (request parameter optional) ID of the type.
+     * @param hasModel (request parameter optional) if the item has a model.
+     * @return Page of items.
+     */
+    @Override
+    public Page<Item> fetchFavourites(Principal principal, Integer pageNum, String itemName, Integer catId,
+                                      Integer typeId, Boolean hasModel)
+    {
+        User user = userRepository.findByEmail(principal.getName());
+        return enhancedItemRepository.findAllUserFavourites(pageNum, itemName, catId, typeId, hasModel, user.getUserId());
     }
 
     /**
@@ -184,7 +242,7 @@ public class ItemService implements IItemService
         Long sharedVId = items.get(0).getItemVariant().getVariantId();
 
         List<ItemVariant> variantIds = new ArrayList<>();
-        for(Long id: itemIds)
+        for(Long ignored : itemIds)
             variantIds.add(addVariant());
 
         int count = 0;
@@ -207,47 +265,6 @@ public class ItemService implements IItemService
     public Long getVariantId(Long itemId)
     {
         return itemRepository.findVariantIdByItemId(itemId);
-    }
-
-    /**
-     * Fetch all the variants of the item.
-     * @param itemId ID of the item.
-     * @return List of objects.
-     */
-    @Override
-    public List<Object[]> fetchItemVariants(Long itemId)
-    {
-        Item item = itemRepository.getOne(itemId);
-        return itemRepository.findByVariantId(item.getItemVariant().getVariantId());
-    }
-
-    /**
-     * Return the user of the item.
-     * @param itemId ID of the item.
-     * @return User.
-     */
-    @Override
-    public User getUser(Long itemId)
-    {
-        return itemRepository.getOne(itemId).getUser();
-    }
-
-    /**
-     * Fetch all items from the database. Paged to prevent retrieving all items at once.
-     * @param pageNum page number.
-     * @param itemName name of the item (does not have to be exact).
-     * @param catId ID of the category.
-     * @param typeId ID of the type.
-     * @param hasModel if the item has a model.
-     * @return Page of items.
-     */
-    @Override
-    public Page<Item> fetchItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel)
-    {
-        System.out.println("ItemService :: fetching with criterion (pageNum, itemName, catName, typeName, hasModel): "
-                + pageNum + "," + itemName + "," + catId + "," + typeId + "," + hasModel);
-
-        return enhancedItemRepository.findAllItems(pageNum,itemName,catId,typeId,hasModel);
     }
 
     /**

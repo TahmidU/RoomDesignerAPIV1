@@ -13,6 +13,5 @@ public interface IFavouriteController
 {
     HttpStatus addFavourite(Principal principal, @RequestParam Long itemId);
     HttpStatus removeFavourite(Principal principal, @RequestParam Long itemId);
-    ResponseEntity<List<Long>> fetchFavourited(Principal principal);
     ResponseEntity<Boolean> fetchItemFavourited(Principal principal, @RequestParam Long itemId);
 }

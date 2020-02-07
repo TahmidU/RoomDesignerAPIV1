@@ -1,6 +1,9 @@
 package com.aarrd.room_designer.user.security.vertification;
 
 import com.aarrd.room_designer.user.User;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import org.hibernate.annotations.Cascade;
 
@@ -25,6 +28,8 @@ public class VerificationToken
     @Column(name = "expiry", nullable = false)
     private long expiry;
 
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

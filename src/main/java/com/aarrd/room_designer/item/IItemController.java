@@ -14,8 +14,18 @@ public interface IItemController
     HttpStatus addItem(@RequestBody Item item, Principal principal, @RequestParam String catName,
                        @RequestParam String typeName);
     ResponseEntity<?> fetchItem(@RequestParam Long itemId);
-    ResponseEntity<?> fetchItemsByUserId(@RequestParam Long userId);
-    ResponseEntity<?> fetchItemByCategory(@RequestParam String catName, @RequestParam Integer pageNum);
+    ResponseEntity<?> fetchItemsByUserId(@RequestParam Integer pageNum, @RequestParam String itemName,
+                                         @RequestParam Integer catId, @RequestParam Integer typeId,
+                                         @RequestParam Boolean hasModel, @RequestParam Long userId);
+    ResponseEntity<?> fetchItems(@RequestParam Integer pageNum, @RequestParam String itemName, @RequestParam Integer catId,
+                                 @RequestParam Integer typeId, @RequestParam Boolean hasModel);
+    ResponseEntity<?> fetchItemVariant(@RequestParam Long itemId);
+    ResponseEntity<?> fetchUserItems(Principal principal, @RequestParam Integer pageNum,
+                                                @RequestParam String itemName, @RequestParam Integer catId,
+                                                @RequestParam Integer typeId, @RequestParam Boolean hasModel);
+    ResponseEntity<?> fetchUserFavourites(Principal principal, @RequestParam Integer pageNum,
+                                     @RequestParam String itemName, @RequestParam Integer catId,
+                                     @RequestParam Integer typeId, @RequestParam Boolean hasModel);
     HttpStatus removeItem(@RequestParam Long id);
     HttpStatus modifyItem(@RequestBody Item modItem);
     HttpStatus changeCategory(@RequestParam Long itemId, @RequestParam String name);
@@ -23,7 +33,4 @@ public interface IItemController
     HttpStatus mergeVariants(@RequestParam List<Long> itemIds);
     HttpStatus separateVariants(@RequestParam List<Long> itemIds);
     ResponseEntity<Long> getVariantId(@RequestParam Long itemId);
-    ResponseEntity<?> fetchItemVariant(@RequestParam Long itemId);
-    ResponseEntity<?> fetchItems(@RequestParam Integer pageNum,@RequestParam String itemName,@RequestParam Integer catId,
-                                 @RequestParam Integer typeId,@RequestParam Boolean hasModel);
 }
