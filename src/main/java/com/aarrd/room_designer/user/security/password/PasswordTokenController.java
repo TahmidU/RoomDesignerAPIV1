@@ -39,7 +39,7 @@ public class PasswordTokenController implements IPasswordTokenController
      * @param password (request parameter) password.
      * @return ResponseEntity containing string (if it was a success).
      */
-    @PostMapping("/recovery/change-password")
+    @PostMapping("/recovery/change")
     @Override
     public ResponseEntity<String> changePassword(@RequestParam String email, @RequestParam int token,
                                                  @RequestParam String password)

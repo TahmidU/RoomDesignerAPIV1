@@ -53,7 +53,7 @@ public class FavouriteController implements IFavouriteController
      * @param itemId (request param) item that is checked.
      * @return ResponseEntity containing a boolean.
      */
-    @GetMapping(value = "fetch-item")
+    @GetMapping(value = "item")
     @Override
     public ResponseEntity<Boolean> fetchItemFavourited(Principal principal, @RequestParam Long itemId) {
         return new ResponseEntity<Boolean>(favouriteService.fetchItemFavourited(principal,itemId), HttpStatus.OK);

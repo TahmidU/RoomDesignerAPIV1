@@ -77,7 +77,7 @@ public class ModelController implements IModelController
     @Override
     public ResponseEntity<Long> relevantModel(@RequestParam Long itemId)
     {
-        return new ResponseEntity<Long>(modelService.relevantModel(itemId), HttpStatus.OK);
+        return new ResponseEntity<>(modelService.relevantModel(itemId), HttpStatus.OK);
     }
 
     /**
@@ -89,7 +89,7 @@ public class ModelController implements IModelController
     @Override
     public ResponseEntity<Boolean> modelExists(Long itemId)
     {
-        return new ResponseEntity<Boolean>(modelService.modelExists(itemId), HttpStatus.OK);
+        return new ResponseEntity<>(modelService.modelExists(itemId), HttpStatus.OK);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

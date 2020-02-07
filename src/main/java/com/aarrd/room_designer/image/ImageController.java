@@ -60,7 +60,7 @@ public class ImageController implements IImageController
      * @param principal currently logged in user.
      * @return HttpStatus
      */
-    @PostMapping("/upload-image")
+    @PostMapping("/upload")
     @Override
     public HttpStatus handleImageUpload(@RequestParam("file") MultipartFile file, @RequestParam Long itemId,
                                         @RequestParam Boolean isThumbnail, Principal principal)
@@ -77,7 +77,7 @@ public class ImageController implements IImageController
      * @param principal currently logged in user.
      * @return HttpStatus
      */
-    @DeleteMapping("/delete-image")
+    @DeleteMapping("/delete")
     @Override
     public HttpStatus handleDeletion(@RequestParam Long imageId, @RequestParam Boolean isThumbnail,
                                      @RequestParam Long itemId, Principal principal)

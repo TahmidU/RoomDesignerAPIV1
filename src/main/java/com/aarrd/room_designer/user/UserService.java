@@ -14,10 +14,26 @@ import java.security.Principal;
 @Service
 public class UserService implements IUserService
 {
+    private final IUserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
-    private IUserRepository userRepository;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    public UserService(IUserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder)
+    {
+        this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    /**
+     * Retrieve user details.
+     * @param principal currently logged in user.
+     * @return ResponseEntity containing user.
+     */
+    @Override
+    public ResponseEntity<?> userDetails(Principal principal)
+    {
+        return new ResponseEntity<>(userRepository.findByEmail(principal.getName()), HttpStatus.OK);
+    }
 
     /**
      * Change user details.
@@ -48,7 +64,7 @@ public class UserService implements IUserService
      * @throws IOException
      */
     @Override
-    public ResponseEntity<String> authenticateUser(SignInUser signInUser) throws IOException
+    public ResponseEntity<?> authenticateUser(SignInUser signInUser) throws IOException
     {
         User user = userRepository.findByEmail(signInUser.getEmail());
         if(user != null)
@@ -59,6 +75,6 @@ public class UserService implements IUserService
             }else
                 return new ResponseEntity<String>("NOT ACTIVE", HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<String>("NOT FOUND", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("NOT FOUND", HttpStatus.UNAUTHORIZED);
     }
 }

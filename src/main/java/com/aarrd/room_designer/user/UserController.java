@@ -12,8 +12,25 @@ import java.security.Principal;
 @RequestMapping("/user")
 public class UserController implements IUserController
 {
+    private final IUserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(IUserService userService)
+    {
+        this.userService = userService;
+    }
+
+    /**
+     * Retrieve user details.
+     * @param principal currently logged in user.
+     * @return ResponseEntity containing user.
+     */
+    @GetMapping(value = "/me")
+    @Override
+    public ResponseEntity<?> userDetails(Principal principal)
+    {
+        return userService.userDetails(principal);
+    }
 
     /**
      * Change user details.
@@ -36,7 +53,7 @@ public class UserController implements IUserController
      */
     @GetMapping(value = "/authenticate")
     @Override
-    public ResponseEntity<String> authenticateUser(@RequestBody SignInUser signInUser) throws IOException
+    public ResponseEntity<?> authenticateUser(@RequestBody SignInUser signInUser) throws IOException
     {
         return userService.authenticateUser(signInUser);
     }
