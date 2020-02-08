@@ -1,17 +1,9 @@
 package com.aarrd.room_designer.user.security.sign_up;
 
-import com.aarrd.room_designer.user.SignInUser;
-import com.aarrd.room_designer.user.User;
-import com.aarrd.room_designer.user.IUserRepository;
-import com.aarrd.room_designer.user.security.vertification.IVerificationTokenRepository;
 import com.aarrd.room_designer.user.security.vertification.TokenDoesNotExistException;
 import com.aarrd.room_designer.user.security.vertification.TokenExpiredException;
-import com.aarrd.room_designer.user.security.vertification.VerificationToken;
-import com.aarrd.room_designer.user.security.vertification.registration.OnRegistrationComplete;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
@@ -28,15 +20,19 @@ public class SignUpController implements ISignUpController
     }
 
     /**
-     * User sign up. Send email for verification.
-     * @param signUpUser (Request Body) SignUpUser.
-     * @return HttpStatus.
+     * User sign up. Send email and by triggering an event.
+     * @param firstName (request parameter) first name of the user.
+     * @param lastName (request parameter) last name of the user.
+     * @param password (request parameter) password of the user.
+     * @param email (request parameter) email of the user.
+     * @param phoneNum (request parameter) phone number of the user.
      */
     @PostMapping("/v1")
     @Override
-    public HttpStatus signUp(@RequestBody SignUpUser signUpUser)
+    public HttpStatus signUp(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String password,
+                             @RequestParam String email, @RequestParam String phoneNum)
     {
-        signUpService.signUp(signUpUser);
+        signUpService.signUp(firstName, lastName, password, email, phoneNum);
         return HttpStatus.OK;
     }
 
@@ -57,15 +53,14 @@ public class SignUpController implements ISignUpController
     }
 
     /**
-     * Resend verification email.
-     * @param signInUser (request body) SignInUser.
-     * @return HttpStatus.
+     * Resend verification token.
+     * @param email (request parameter) email of the user.
      */
     @PostMapping("/resend-token")
     @Override
-    public HttpStatus resendVerificationToken(@RequestBody SignInUser signInUser)
+    public HttpStatus resendVerificationToken(@RequestParam String email)
     {
-        signUpService.resendVerificationToken(signInUser);
+        signUpService.resendVerificationToken(email);
         return HttpStatus.OK;
     }
 }

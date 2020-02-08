@@ -1,7 +1,6 @@
 package com.aarrd.room_designer.user.security.sign_up;
 
 import com.aarrd.room_designer.user.IUserRepository;
-import com.aarrd.room_designer.user.SignInUser;
 import com.aarrd.room_designer.user.User;
 import com.aarrd.room_designer.user.security.vertification.IVerificationTokenRepository;
 import com.aarrd.room_designer.user.security.vertification.TokenDoesNotExistException;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Calendar;
 
 @Service
@@ -37,13 +35,15 @@ public class SignUpService implements ISignUpService
 
     /**
      * User sign up. Send email and by triggering an event.
-     * @param signUpUser SignUpUser.
+     * @param firstName first name of the user.
+     * @param lastName last name of the user.
+     * @param password password of the user.
+     * @param email email of the user.
+     * @param phoneNum phone number of the user.
      */
     @Override
-    public void signUp(SignUpUser signUpUser) {
-        User user = new User(signUpUser.getFirstName(),signUpUser.getLastName(),
-                bCryptPasswordEncoder.encode(signUpUser.getPassword()), signUpUser.getEmail(),
-                signUpUser.getPhoneNum(), false);
+    public void signUp(String firstName, String lastName, String password, String email, String phoneNum) {
+        User user = new User(firstName, lastName, bCryptPasswordEncoder.encode(password), email, phoneNum, false);
         userRepository.save(user);
         applicationEventPublisher.publishEvent(new OnRegistrationComplete(user));
     }
@@ -77,12 +77,12 @@ public class SignUpService implements ISignUpService
 
     /**
      * Resend verification token.
-     * @param signInUser SignInUser.
+     * @param email email of the user.
      */
     @Override
-    public void resendVerificationToken(SignInUser signInUser)
+    public void resendVerificationToken(String email)
     {
-        User user = userRepository.findByEmail(signInUser.getEmail());
+        User user = userRepository.findByEmail(email);
         VerificationToken token = verificationTokenRepository.findByUser(user.getUserId());
         verificationTokenRepository.delete(token);
 

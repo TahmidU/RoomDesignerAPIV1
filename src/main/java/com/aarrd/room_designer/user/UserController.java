@@ -34,27 +34,34 @@ public class UserController implements IUserController
 
     /**
      * Change user details.
-     * @param principal currently logged in user.
-     * @param userDetail (request body) UserDetail.
+     * @param principal (request parameter) currently logged in user.
+     * @param firstName (request parameter) new first name of the user.
+     * @param lastName (request parameter) new last name of the user.
+     * @param password (request parameter) new password of the user.
+     * @param phoneNum (request parameter) new phone number of the user.
      * @return HttpStatus.
      */
     @PutMapping(value = "/change-details", produces = "application/json")
     @Override
-    public HttpStatus changeDetails(Principal principal, @RequestBody UserDetail userDetail)
+    public HttpStatus changeDetails(Principal principal, @RequestParam(required = false) String firstName,
+                                    @RequestParam(required = false) String lastName,
+                                    @RequestParam(required = false) String password,
+                                    @RequestParam(required = false) String phoneNum)
     {
-        return userService.changeDetails(principal, userDetail);
+        return userService.changeDetails(principal, firstName, lastName, password, phoneNum);
     }
 
     /**
      * Authenticate user.
-     * @param signInUser (request body) SignInUser.
-     * @return ResponseEntity containing string.
+     * @param email (request parameter) email of the user.
+     * @param password (request parameter) password of the user.
+     * @return ResponseEntity containing String.
      * @throws IOException
      */
     @GetMapping(value = "/authenticate")
     @Override
-    public ResponseEntity<?> authenticateUser(@RequestBody SignInUser signInUser) throws IOException
+    public ResponseEntity<?> authenticateUser(@RequestBody String email, @RequestBody String password) throws IOException
     {
-        return userService.authenticateUser(signInUser);
+        return userService.authenticateUser(email, password);
     }
 }

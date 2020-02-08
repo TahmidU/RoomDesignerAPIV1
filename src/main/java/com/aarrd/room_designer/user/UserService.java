@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -38,18 +40,25 @@ public class UserService implements IUserService
     /**
      * Change user details.
      * @param principal currently logged in user.
-     * @param userDetail UserDetail.
+     * @param firstName new first name of the user.
+     * @param lastName new last name of the user.
+     * @param password new password of the user.
+     * @param phoneNum new phone number of the user.
      * @return HttpStatus.
      */
-    public HttpStatus changeDetails(Principal principal, UserDetail userDetail)
+    public HttpStatus changeDetails(Principal principal, String firstName, String lastName, String password, String phoneNum)
     {
         User user = userRepository.findByEmail(principal.getName());
         if (user != null)
         {
-            user.setFirstName(userDetail.getFirstName());
-            user.setLastName(userDetail.getLastName());
-            user.setPassword(bCryptPasswordEncoder.encode(userDetail.getPassword()));
-            user.setPhoneNum(userDetail.getPhoneNum());
+            if(firstName != null)
+                user.setFirstName(firstName);
+            if(lastName != null)
+                user.setLastName(lastName);
+            if(password != null)
+                user.setPassword(bCryptPasswordEncoder.encode(password));
+            if(password != null)
+                user.setPhoneNum(phoneNum);
 
             userRepository.save(user);
             return HttpStatus.OK;
@@ -59,18 +68,19 @@ public class UserService implements IUserService
 
     /**
      * Authenticate user.
-     * @param signInUser (request body) SignInUser.
-     * @return ResponseEntity containing string.
+     * @param email email of the user.
+     * @param password password of the user.
+     * @return ResponseEntity containing String.
      * @throws IOException
      */
     @Override
-    public ResponseEntity<?> authenticateUser(SignInUser signInUser) throws IOException
+    public ResponseEntity<?> authenticateUser(String email, String password) throws IOException
     {
-        User user = userRepository.findByEmail(signInUser.getEmail());
+        User user = userRepository.findByEmail(email);
         if(user != null)
         {
             if(user.getActive()) {
-                if (bCryptPasswordEncoder.matches(signInUser.getPassword(), user.getPassword()))
+                if (bCryptPasswordEncoder.matches(password, user.getPassword()))
                     return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
             }else
                 return new ResponseEntity<String>("NOT ACTIVE", HttpStatus.UNAUTHORIZED);
