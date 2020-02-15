@@ -14,5 +14,5 @@ public interface IUserController
     ResponseEntity<?> userDetails(Principal principal);
     HttpStatus changeDetails(Principal principal, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String password,
                              @RequestParam String phoneNum);
-    ResponseEntity<?> authenticateUser(@RequestBody String email, @RequestBody String password) throws IOException;
+    ResponseEntity<?> authenticateUser(@RequestParam String email, @RequestParam String password) throws IOException;
 }

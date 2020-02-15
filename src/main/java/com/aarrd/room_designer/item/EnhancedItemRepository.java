@@ -53,128 +53,23 @@ public class EnhancedItemRepository implements IEnhancedItemRepository
         Root<Item> root = criteriaQuery.from(Item.class);
 
         //Filter and overwrite query.
-        if(itemName != null)
-            criteriaQuery.select(root).where(cb.like(root.get("name"), "%"+itemName+"%"));
-        if(catId != null)
-        {
+        if(itemName != null) {
+            predicates.add(cb.like(root.get("name"), "%" + itemName + "%"));
+        }
+        if(catId != null) {
             Join<Item, Category> catJoin = root.join("category");
             predicates.add(cb.equal(catJoin.get("catId"), catId));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
         }
-        if(typeId != null)
-        {
+        if(typeId != null) {
             Join<Item, Type> typeJoin = root.join("type");
             predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
         }
-        if(hasModel != null)
-        {
-            if(hasModel)
-            {
-                criteriaQuery.select(root).where(cb.equal(root.get("hasModel"), 1));
-            }
-        }
-        if(itemName != null && catId != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
-        }
-        if(itemName != null && typeId != null)
-        {
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
-        }
-        if(itemName != null && hasModel != null)
-        {
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
+        if(hasModel != null) {
             if(hasModel)
                 predicates.add(cb.equal(root.get("hasModel"), 1));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
-        }
-        if(catId != null && typeId != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
-        }
-        if(catId != null && hasModel != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
-        }
-        if(typeId != null && hasModel != null)
-        {
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
-        }
-        if(itemName != null && catId != null && typeId != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
-        }
-        if(itemName != null && typeId != null && hasModel != null)
-        {
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
-        }
-        if(catId != null && typeId != null && hasModel != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
-        }
-        if(itemName != null && catId != null && typeId != null && hasModel != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-
-            criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
         }
 
-        criteriaQuery.select(root);
+        criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
 
         TypedQuery<Item> query = em.createQuery(criteriaQuery);
         query.setFirstResult(Math.toIntExact(pageNum));
@@ -205,144 +100,24 @@ public class EnhancedItemRepository implements IEnhancedItemRepository
         List<Predicate> predicates = new ArrayList<>();
         Root<Item> root = criteriaQuery.from(Item.class);
 
+        Join<Item, User> userJoin = root.join("user");
+        predicates.add(cb.equal(userJoin.get("userId"), userId));
+
         //Filter and overwrite query.
         if(itemName != null)
-        {
-            Join<Item, User> userJoin = root.join("user");
-
             predicates.add(cb.like(root.get("name"), "%" + itemName + "%"));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-        }
         if(catId != null)
         {
             Join<Item, Category> catJoin = root.join("category");
-            Join<Item, User> userJoin = root.join("user");
-
             predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
         }
         if(typeId != null)
         {
             Join<Item, Type> typeJoin = root.join("type");
-            Join<Item, User> userJoin = root.join("user");
-
             predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
         }
         if(hasModel != null)
-        {
-            Join<Item, User> userJoin = root.join("user");
-
             predicates.add(cb.equal(root.get("hasModel"), 1));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-        }
-        if(itemName != null && catId != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, User> userJoin = root.join("user");
-
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-        }
-        if(itemName != null && typeId != null)
-        {
-            Join<Item, Type> typeJoin = root.join("type");
-            Join<Item, User> userJoin = root.join("user");
-
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-        }
-        if(itemName != null && hasModel != null)
-        {
-            Join<Item, User> userJoin = root.join("user");
-
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-        }
-        if(catId != null && typeId != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            Join<Item, User> userJoin = root.join("user");
-
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-        }
-        if(catId != null && hasModel != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, User> userJoin = root.join("user");
-
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-        }
-        if(typeId != null && hasModel != null)
-        {
-            Join<Item, Type> typeJoin = root.join("type");
-            Join<Item, User> userJoin = root.join("user");
-
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-        }
-        if(itemName != null && catId != null && typeId != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            Join<Item, User> userJoin = root.join("user");
-
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-        }
-        if(itemName != null && typeId != null && hasModel != null)
-        {
-            Join<Item, Type> typeJoin = root.join("type");
-            Join<Item, User> userJoin = root.join("user");
-
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-        }
-        if(catId != null && typeId != null && hasModel != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            Join<Item, User> userJoin = root.join("user");
-
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-        }
-        if(itemName != null && catId != null && typeId != null && hasModel != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            Join<Item, User> userJoin = root.join("user");
-
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(userJoin.get("userId"), userId));
-
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-        }
 
         criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
 

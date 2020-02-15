@@ -9,6 +9,8 @@ import com.aarrd.room_designer.user.security.vertification.VerificationToken;
 import com.aarrd.room_designer.user.security.vertification.registration.OnRegistrationComplete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Calendar;
@@ -56,23 +58,30 @@ public class SignUpService implements ISignUpService
      * @throws TokenExpiredException
      */
     @Override
-    public void confirmation(int token, String email) throws TokenDoesNotExistException, TokenExpiredException
+    public ResponseEntity<?> confirmation(int token, String email) throws TokenDoesNotExistException, TokenExpiredException
     {
         User user = userRepository.findByEmail(email);
         VerificationToken verificationToken = verificationTokenRepository.findByUser(user.getUserId());
         if(verificationToken != null)
         {
-            verificationTokenRepository.delete(verificationToken);
-            if((verificationToken.getExpiry() - (Calendar.getInstance()).getTime().getTime()) <= 0)
+            if(verificationToken.getToken() == token)
             {
-                applicationEventPublisher.publishEvent(new OnRegistrationComplete(user));
-                throw new TokenExpiredException("Token has expired.");
-            }
+                verificationTokenRepository.delete(verificationToken);
+                if((verificationToken.getExpiry() - (Calendar.getInstance()).getTime().getTime()) <= 0)
+                {
+                    applicationEventPublisher.publishEvent(new OnRegistrationComplete(user));
+                    return new ResponseEntity<>("Token has expired! Click Resend Token.", HttpStatus.OK);
+                }
 
-            user.setActive(true);
-            userRepository.save(user);
-        }else
-            throw new TokenDoesNotExistException("Token does not exist!");
+                user.setActive(true);
+                userRepository.save(user);
+
+                return new ResponseEntity<>("", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Token incorrect!", HttpStatus.OK);
+
+        }
+        return new ResponseEntity<>("Internal Server Error", HttpStatus.CONFLICT);
     }
 
     /**

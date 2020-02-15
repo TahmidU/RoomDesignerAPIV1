@@ -81,10 +81,13 @@ public class UserService implements IUserService
         {
             if(user.getActive()) {
                 if (bCryptPasswordEncoder.matches(password, user.getPassword()))
-                    return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+                    return new ResponseEntity<>("", HttpStatus.OK);
+                else
+                    return new ResponseEntity<>("Email or Password incorrect.", HttpStatus.OK);
             }else
-                return new ResponseEntity<String>("NOT ACTIVE", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>("This Account is not active.", HttpStatus.OK);
         }
-        return new ResponseEntity<>("NOT FOUND", HttpStatus.UNAUTHORIZED);
+        System.out.println("UserService:: user " + email + "is null.");
+        return new ResponseEntity<>("Email or Password incorrect.", HttpStatus.OK);
     }
 }

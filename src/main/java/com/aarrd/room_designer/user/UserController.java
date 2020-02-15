@@ -60,7 +60,7 @@ public class UserController implements IUserController
      */
     @GetMapping(value = "/authenticate")
     @Override
-    public ResponseEntity<?> authenticateUser(@RequestBody String email, @RequestBody String password) throws IOException
+    public ResponseEntity<?> authenticateUser(@RequestParam String email, @RequestParam String password) throws IOException
     {
         return userService.authenticateUser(email, password);
     }

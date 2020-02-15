@@ -4,6 +4,7 @@ import com.aarrd.room_designer.user.security.vertification.TokenDoesNotExistExce
 import com.aarrd.room_designer.user.security.vertification.TokenExpiredException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
@@ -46,10 +47,9 @@ public class SignUpController implements ISignUpController
      */
     @PostMapping("/confirmation")
     @Override
-    public HttpStatus confirmAccount(@RequestParam int token, @RequestParam String email) throws TokenDoesNotExistException, TokenExpiredException
+    public ResponseEntity<?> confirmAccount(@RequestParam int token, @RequestParam String email) throws TokenDoesNotExistException, TokenExpiredException
     {
-        signUpService.confirmation(token, email);
-        return HttpStatus.OK;
+        return signUpService.confirmation(token, email);
     }
 
     /**
