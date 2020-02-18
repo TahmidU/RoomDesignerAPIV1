@@ -54,6 +54,9 @@ public class PasswordTokenService implements IPasswordTokenService
     public ResponseEntity<String> changePassword(String email, int token, String password)
     {
         User user = userRepository.findByEmail(email);
+        if(user == null)
+            return new ResponseEntity<>("Email does not exist", HttpStatus.OK);
+
         PasswordToken passwordToken = passwordTokenRepository.findByUserId(user.getUserId());
 
         if(passwordToken != null)

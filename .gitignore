@@ -33,3 +33,4 @@ out/
 .vscode/
 /src/main/java/com/aarrd/room_designer/AppConfig.java
 /data/
+/local.properties
