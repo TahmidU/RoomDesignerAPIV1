@@ -5,7 +5,6 @@ import com.aarrd.room_designer.item.category.Category;
 import com.aarrd.room_designer.item.type.Type;
 import com.aarrd.room_designer.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -42,7 +41,7 @@ public class EnhancedItemRepository implements IEnhancedItemRepository
      * @return Page of items.
      */
     @Override
-    public Page<Item> findAllItems(Integer pageNum, String itemName, Integer catId, Integer typeId,
+    public List<Item> findAllItems(Integer pageNum, String itemName, Integer catId, Integer typeId,
                                        Boolean hasModel)
     {
         int pageSize = 16;
@@ -75,7 +74,7 @@ public class EnhancedItemRepository implements IEnhancedItemRepository
         query.setFirstResult(Math.toIntExact(pageNum));
         query.setMaxResults(pageSize);
         return new PageImpl<>((query.getResultList()),
-                PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.ASC, "date")), getTotalCount(cb));
+                PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.ASC, "date")), getTotalCount(cb)).toList();
     }
 
     /**
@@ -90,7 +89,7 @@ public class EnhancedItemRepository implements IEnhancedItemRepository
      * @return Page of items.
      */
     @Override
-    public Page<Item> findAllUserItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel,
+    public List<Item> findAllUserItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel,
                                        Long userId)
     {
         int pageSize = 16;
@@ -125,7 +124,7 @@ public class EnhancedItemRepository implements IEnhancedItemRepository
         query.setFirstResult(Math.toIntExact(pageNum));
         query.setMaxResults(pageSize);
         return new PageImpl<>((query.getResultList()),
-                PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.ASC, "date")), getTotalCount(cb));
+                PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.ASC, "date")), getTotalCount(cb)).toList();
     }
 
     /**
@@ -139,7 +138,7 @@ public class EnhancedItemRepository implements IEnhancedItemRepository
      * @return Page of items.
      */
     @Override
-    public Page<Item> findAllUserFavourites(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel,
+    public List<Item> findAllUserFavourites(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel,
                                        Long userId)
     {
         List<Long> favourites = favouriteRepository.findByUserId(userId);
@@ -151,12 +150,13 @@ public class EnhancedItemRepository implements IEnhancedItemRepository
         List<Predicate> predicates = new ArrayList<>();
         Root<Item> root = criteriaQuery.from(Item.class);
 
+        predicates.add(cb.equal(root.get("userId"), userId));
+        Expression<Long> favouritesExpression = root.get("itemId");
+        predicates.add(favouritesExpression.in(favourites));
+
         //Filter and overwrite query.
         if(itemName != null)
-        {
             predicates.add(cb.like(root.get("name"), "%" + itemName + "%"));
-            predicates.add(cb.equal(root.get("userId"), userId));
-        }
         if(catId != null)
         {
             Join<Item, Category> catJoin = root.join("category");
@@ -166,112 +166,17 @@ public class EnhancedItemRepository implements IEnhancedItemRepository
         {
             Join<Item, Type> typeJoin = root.join("type");
             predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(root.get("userId"), userId));
         }
         if(hasModel != null)
-        {
             predicates.add(cb.equal(root.get("hasModel"), 1));
-            predicates.add(cb.equal(root.get("userId"), userId));
-        }
-        if(itemName != null && catId != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(root.get("userId"), userId));
-        }
-        if(itemName != null && typeId != null)
-        {
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(root.get("userId"), userId));
-        }
-        if(itemName != null && hasModel != null)
-        {
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(root.get("userId"), userId));
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-        }
-        if(catId != null && typeId != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(root.get("userId"), userId));
-        }
-        if(catId != null && hasModel != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(root.get("userId"), userId));
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-        }
-        if(typeId != null && hasModel != null)
-        {
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(root.get("userId"), userId));
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-        }
-        if(itemName != null && catId != null && typeId != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(root.get("userId"), userId));
 
-        }
-        if(itemName != null && typeId != null && hasModel != null)
-        {
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(root.get("userId"), userId));
-
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-        }
-        if(catId != null && typeId != null && hasModel != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.equal(root.get("userId"), userId));
-
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-
-        }
-        if(itemName != null && catId != null && typeId != null && hasModel != null)
-        {
-            Join<Item, Category> catJoin = root.join("category");
-            Join<Item, Type> typeJoin = root.join("type");
-            predicates.add(cb.equal(catJoin.get("catId"), catId));
-            predicates.add(cb.equal(typeJoin.get("typeId"), typeId));
-            predicates.add(cb.like(root.get("name"), "%"+itemName+"%"));
-            predicates.add(cb.equal(root.get("userId"), userId));
-
-            if(hasModel)
-                predicates.add(cb.equal(root.get("hasModel"), 1));
-        }
-
-        Expression<Long> favouritesExpression = root.get("itemId");
-        predicates.add(favouritesExpression.in(favourites));
         criteriaQuery.select(root).where(predicates.toArray(new Predicate[]{}));
 
         TypedQuery<Item> query = em.createQuery(criteriaQuery);
         query.setFirstResult(Math.toIntExact(pageNum));
         query.setMaxResults(pageSize);
         return new PageImpl<>((query.getResultList()),
-                PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.ASC, "date")), getTotalCount(cb));
+                PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.ASC, "date")), getTotalCount(cb)).toList();
     }
 
     private Long getTotalCount(CriteriaBuilder cb)

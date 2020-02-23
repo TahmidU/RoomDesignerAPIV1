@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ItemService implements IItemService
@@ -52,7 +50,7 @@ public class ItemService implements IItemService
         item.setItemVariant(addVariant());
         item.setCategory(categoryRepository.findByName(catName));
         item.setType(typeRepository.findByName(typeName));
-        item.setDate(new Date());
+        item.setDate(Calendar.getInstance(TimeZone.getTimeZone("GMT")).getTime());
         itemRepository.save(item);
     }
 
@@ -78,7 +76,7 @@ public class ItemService implements IItemService
      * @return Page of items.
      */
     @Override
-    public Page<Item> fetchUserItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel,
+    public List<Item> fetchUserItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel,
                                      Long userId)
     {
         return enhancedItemRepository.findAllUserItems(pageNum, itemName, catId, typeId, hasModel, userId);
@@ -107,7 +105,7 @@ public class ItemService implements IItemService
      * @return Page of items.
      */
     @Override
-    public Page<Item> fetchItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel)
+    public List<Item> fetchItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel)
     {
         System.out.println("ItemService :: fetching with criterion (pageNum, itemName, catName, typeName, hasModel): "
                 + pageNum + "," + itemName + "," + catId + "," + typeId + "," + hasModel);
@@ -126,7 +124,7 @@ public class ItemService implements IItemService
      * @return Page of items.
      */
     @Override
-    public Page<Item> fetchUserItems(Principal principal, Integer pageNum, String itemName, Integer catId,
+    public List<Item> fetchUserItems(Principal principal, Integer pageNum, String itemName, Integer catId,
                                            Integer typeId, Boolean hasModel)
     {
         User user = userRepository.findByEmail(principal.getName());
@@ -144,7 +142,7 @@ public class ItemService implements IItemService
      * @return Page of items.
      */
     @Override
-    public Page<Item> fetchFavourites(Principal principal, Integer pageNum, String itemName, Integer catId,
+    public List<Item> fetchFavourites(Principal principal, Integer pageNum, String itemName, Integer catId,
                                       Integer typeId, Boolean hasModel)
     {
         User user = userRepository.findByEmail(principal.getName());

@@ -50,6 +50,7 @@ public class ImageService implements IImageService
 
         permissibleTypes.add("image/jpeg");
         permissibleTypes.add("image/png");
+        permissibleTypes.add("image/webp");
     }
 
     /**

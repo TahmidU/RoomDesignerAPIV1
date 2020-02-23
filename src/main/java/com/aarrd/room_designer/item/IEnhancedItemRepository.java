@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface IEnhancedItemRepository
 {
-    Page<Item> findAllItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel);
-    Page<Item> findAllUserItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel,
+    List<Item> findAllItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel);
+    List<Item> findAllUserItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel,
                                 Long userId);
-    Page<Item> findAllUserFavourites(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel,
+    List<Item> findAllUserFavourites(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel,
                                      Long userId);
 }

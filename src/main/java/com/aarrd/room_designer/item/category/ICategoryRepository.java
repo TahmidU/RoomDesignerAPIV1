@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ICategoryRepository extends JpaRepository<Category, Long>
 {
-    @Query("FROM Category WHERE catName = ?1")
+    @Query("FROM Category c WHERE c.name = ?1")
     Category findByName(String name);
 }

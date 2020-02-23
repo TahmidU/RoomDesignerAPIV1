@@ -2,6 +2,7 @@ package com.aarrd.room_designer.storage;
 
 import com.aarrd.room_designer.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -19,14 +20,15 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Service
-public class FileSystemIStorageService implements IStorageService
+@Primary
+public class FileSystemStorageService implements IStorageService
 {
     private final Path ROOT_LOCATION;
     private final String IMAGE;
     private final String MODEL;
     
     @Autowired
-    public FileSystemIStorageService(StorageProperties properties)
+    public FileSystemStorageService(StorageProperties properties)
     {
         this.ROOT_LOCATION = Paths.get(properties.getROOT_LOCATION());
         this.IMAGE = properties.getIMAGE();

@@ -12,12 +12,12 @@ public interface IItemService
 {
     void addItem(Item item, Principal principal, String catName, String typeName);
     Item fetchItem(Long itemId);
-    Page<Item> fetchUserItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel, Long userId);
-    Page<Item> fetchItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel);
+    List<Item> fetchUserItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel, Long userId);
+    List<Item> fetchItems(Integer pageNum, String itemName, Integer catId, Integer typeId, Boolean hasModel);
     List<Item> fetchItemVariants(Long itemId);
-    Page<Item> fetchUserItems(Principal principal, Integer pageNum, String itemName, Integer catId,
+    List<Item> fetchUserItems(Principal principal, Integer pageNum, String itemName, Integer catId,
                                     Integer typeId, Boolean hasModel);
-    Page<Item> fetchFavourites(Principal principal, Integer pageNum, String itemName, Integer catId,
+    List<Item> fetchFavourites(Principal principal, Integer pageNum, String itemName, Integer catId,
                               Integer typeId, Boolean hasModel);
     void removeItem(Long itemId);
     void modifyItem(Item modItem);
