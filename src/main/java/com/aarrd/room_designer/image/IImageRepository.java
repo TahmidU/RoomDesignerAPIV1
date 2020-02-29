@@ -12,7 +12,7 @@ public interface IImageRepository extends JpaRepository<Image, Long>
     @Query("SELECT i.imageId FROM Image i WHERE i.item.itemId = ?1")
     List<Long> findImageIdByItemId(Long itemId);
 
-    @Query("SELECT i.imageDirectory FROM Image i WHERE i.imageId = ?1 AND i.isThumbnail = 0")
+    @Query("SELECT i.imageDirectory FROM Image i WHERE i.imageId = ?1")
     String findDirByImageId(Long imageId);
 
     @Query("FROM Image i WHERE i.item.itemId = ?1 AND i.isThumbnail = 1")

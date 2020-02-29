@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Optional;
 
 @Service
 public class UserService implements IUserService
@@ -89,5 +90,20 @@ public class UserService implements IUserService
         }
         System.out.println("UserService:: user " + email + "is null.");
         return new ResponseEntity<>("Email or Password incorrect.", HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> retrieveContactInfo(Long userId)
+    {
+        System.out.println("UserService:: retrieve contact for item id: " + userId);
+        String response = "N/A";
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isPresent())
+        {
+            response = "Email: " + userOptional.get().getEmail() + "\n";
+            if(userOptional.get().getPhoneNum() != null)
+                response = response + "Phone Number: " + userOptional.get().getPhoneNum();
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

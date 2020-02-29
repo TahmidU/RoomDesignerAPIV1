@@ -29,10 +29,10 @@ public class ImageController implements IImageController
      * @param imageId (request parameter) ID of the items images are retrieved.
      * @return ResponseEntity containing the Resource (the image).
      */
-    @GetMapping("/fetch-all")
+    @GetMapping("/fetch-image")
     @ResponseBody
     @Override
-    public ResponseEntity<Resource> serveImage(@RequestParam Long imageId)
+    public ResponseEntity<?> serveImage(@RequestParam Long imageId)
     {
         Resource files = imageService.serveImage(imageId);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(files);

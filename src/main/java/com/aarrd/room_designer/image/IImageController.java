@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface IImageController
 {
-    ResponseEntity<Resource> serveImage(@RequestParam Long imageId);
+    ResponseEntity<?> serveImage(@RequestParam Long imageId);
     ResponseEntity<Resource> serveThumbnail(@RequestParam Long itemId);
     HttpStatus handleImageUpload(@RequestParam("file") MultipartFile file, @RequestParam Long itemId,
                                  @RequestParam Boolean isThumbnail, Principal principal);

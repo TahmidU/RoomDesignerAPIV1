@@ -64,4 +64,10 @@ public class UserController implements IUserController
     {
         return userService.authenticateUser(email, password);
     }
+
+    @GetMapping(value = "/contact-info")
+    public ResponseEntity<?> retrieveContactInfo(@RequestParam Long userId)
+    {
+        return userService.retrieveContactInfo(userId);
+    }
 }
