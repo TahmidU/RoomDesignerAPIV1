@@ -15,4 +15,5 @@ public interface IUserController
     HttpStatus changeDetails(Principal principal, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String password,
                              @RequestParam String phoneNum);
     ResponseEntity<?> authenticateUser(@RequestParam String email, @RequestParam String password) throws IOException;
+    ResponseEntity<?> retrieveUserDetails(@RequestParam Long userId);
 }

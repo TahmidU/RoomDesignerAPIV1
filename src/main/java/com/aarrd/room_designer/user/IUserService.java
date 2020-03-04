@@ -15,5 +15,5 @@ public interface IUserService
     ResponseEntity<?> userDetails(Principal principal);
     HttpStatus changeDetails(Principal principal, String firstName, String lastName, String password, String phoneNum);
     ResponseEntity<?> authenticateUser(String email, String password) throws IOException;
-    ResponseEntity<?> retrieveContactInfo(Long userId);
+    ResponseEntity<?> retrieveUserDetails(Long userId);
 }

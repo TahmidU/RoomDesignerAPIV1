@@ -1,6 +1,7 @@
 package com.aarrd.room_designer.user;
 
 import com.aarrd.room_designer.user.security.sign_up.UserLoginDetail;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,17 +94,21 @@ public class UserService implements IUserService
     }
 
     @Override
-    public ResponseEntity<?> retrieveContactInfo(Long userId)
+    public ResponseEntity<?> retrieveUserDetails(Long userId)
     {
-        System.out.println("UserService:: retrieve contact for item id: " + userId);
-        String response = "N/A";
-        Optional<User> userOptional = userRepository.findById(userId);
-        if(userOptional.isPresent())
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isPresent())
         {
-            response = "Email: " + userOptional.get().getEmail() + "\n";
-            if(userOptional.get().getPhoneNum() != null)
-                response = response + "Phone Number: " + userOptional.get().getPhoneNum();
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("userId", user.get().getUserId());
+            jsonObject.put("firstName", user.get().getFirstName());
+            jsonObject.put("lastName", user.get().getLastName());
+            jsonObject.put("phoneNum", user.get().getPhoneNum());
+            jsonObject.put("email", user.get().getEmail());
+
+            return new ResponseEntity<>(jsonObject.toJSONString(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

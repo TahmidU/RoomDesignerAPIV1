@@ -1,6 +1,7 @@
 package com.aarrd.room_designer.storage;
 
 import com.aarrd.room_designer.user.UserService;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
@@ -10,7 +11,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,6 +19,8 @@ import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 @Primary
@@ -67,6 +70,7 @@ public class FileSystemStorageService implements IStorageService
             location = location + "\\" + IMAGE;
         else if(flags.contains(StorageTypeFlag.MODEL))
             location = location + "\\" + MODEL;
+
         else
             throw new StorageException("Failed to store file. Problem naming the file. " + file.getOriginalFilename());
 
@@ -130,6 +134,29 @@ public class FileSystemStorageService implements IStorageService
         }
     }
 
+    @Override
+    public byte[] loadMultipleResourcesInZip(String[] pathNames, String zipName, String directory) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
+
+        for(String pathName : pathNames)
+        {
+            System.out.println("File System :: " + directory+"\\"+pathName);
+
+            FileInputStream fileInputStream = new FileInputStream(new File(directory + "\\" +pathName));
+            ZipEntry zipEntry = new ZipEntry(pathName);
+            zipOutputStream.putNextEntry(zipEntry);
+
+            byte[] bytes = new byte[1024];
+            int length;
+            while ((length=fileInputStream.read(bytes)) >= 0)
+                zipOutputStream.write(bytes,0,length);
+            fileInputStream.close();
+        }
+        zipOutputStream.close();
+        return byteArrayOutputStream.toByteArray();
+    }
+
     /**
      * Delete the resource.
      * @param path path of the file as well as its name.
@@ -138,14 +165,23 @@ public class FileSystemStorageService implements IStorageService
     public void delete(String path)
     {
         Path filePath = Paths.get(path);
-        if(Files.exists(filePath)) {
+        if(Files.exists(filePath))
+        {
+            try {
+                FileUtils.deleteDirectory(new File(path));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else
+            throw new StorageException("Deletion failed. File "+path+" does not exist.");
+
+/*        if(Files.exists(filePath)) {
             try {
                 Files.delete(Paths.get(path));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else
-            throw new StorageException("Deletion failed. File "+path+" does not exist.");
+        }*/
+
     }
 }

@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping(value = "/model")
@@ -26,31 +31,31 @@ public class ModelController implements IModelController
     /**
      * Serve model file to the client.
      * @param modelId (request parameter) ID of the model.
-     * @param principal currently logged in user.
      * @return ResponseEntity containing resource.
      */
-    @GetMapping("/fetch")
+    @GetMapping(value = "/fetch", produces = "application/zip")
     @ResponseBody
     @Override
-    public ResponseEntity<Resource> serverFile(@RequestParam Long modelId, Principal principal)
+    public ResponseEntity<?> serverFile(@RequestParam Long modelId)
     {
-        Resource file = modelService.serve(modelId);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(file);
+        //List<Resource> files = modelService.serve(modelId);
+        //return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(files);
+        return new ResponseEntity<>(modelService.serve(modelId), HttpStatus.OK);
     }
 
     /**
      * Handles model uploads to the server.
-     * @param file (request parameter) multipart file.
-     * @param modelId (request parameter) ID of the model.
+     * @param files (request parameter) list of multipart file.
+     * @param itemId (request parameter) ID of the model.
      * @param principal currently logged in user.
      * @return HttpStatus.
      */
     @PostMapping("/upload")
     @Override
-    public HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam Long modelId,
+    public HttpStatus handleFileUpload(@RequestParam List<MultipartFile> files, @RequestParam Long itemId,
                                        Principal principal)
     {
-        modelService.store(file, modelId, principal);
+        modelService.store(files, itemId, principal);
         return HttpStatus.CREATED;
     }
 

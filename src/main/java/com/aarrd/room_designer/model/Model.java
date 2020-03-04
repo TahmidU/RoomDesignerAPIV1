@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
 
 @Entity
@@ -19,8 +17,8 @@ public class Model
     @Column(name = "model_id", nullable = false)
     private Long modelId;
 
-    @Column(name = "model_directory", unique = true, nullable = false)
-    private String modelDirectory;
+    @Column(name = "directory", unique = true, nullable = false)
+    private String directory;
 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "itemId")
     @JsonIdentityReference(alwaysAsId = true)
@@ -30,12 +28,8 @@ public class Model
 
     public Model(){}
 
-    public Model(String modelDirectory) {
-        this.modelDirectory = modelDirectory;
-    }
-
-    public Model(String modelDirectory, Item item) {
-        this.modelDirectory = modelDirectory;
+    public Model(String directory, Item item) {
+        this.directory = directory;
         this.item = item;
     }
 }

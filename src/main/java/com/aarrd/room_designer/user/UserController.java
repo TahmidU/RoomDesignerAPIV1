@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -65,9 +66,10 @@ public class UserController implements IUserController
         return userService.authenticateUser(email, password);
     }
 
-    @GetMapping(value = "/contact-info")
-    public ResponseEntity<?> retrieveContactInfo(@RequestParam Long userId)
+    @GetMapping(value = "/details", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> retrieveUserDetails(@RequestParam Long userId)
     {
-        return userService.retrieveContactInfo(userId);
+        return userService.retrieveUserDetails(userId);
     }
 }

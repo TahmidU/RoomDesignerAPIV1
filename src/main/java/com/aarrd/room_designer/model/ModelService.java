@@ -1,8 +1,7 @@
 package com.aarrd.room_designer.model;
 
-import com.aarrd.room_designer.image.IImageRepository;
 import com.aarrd.room_designer.item.IItemRepository;
-import com.aarrd.room_designer.item.IItemService;
+import com.aarrd.room_designer.item.Item;
 import com.aarrd.room_designer.item.statistic.download.IItemDownloadRepository;
 import com.aarrd.room_designer.item.statistic.download.ItemDownload;
 import com.aarrd.room_designer.storage.IStorageService;
@@ -10,20 +9,24 @@ import com.aarrd.room_designer.storage.StorageException;
 import com.aarrd.room_designer.storage.StorageProperties;
 import com.aarrd.room_designer.storage.StorageTypeFlag;
 import com.aarrd.room_designer.user.IUserRepository;
-import com.aarrd.room_designer.user.IUserService;
 import com.aarrd.room_designer.user.User;
-import com.aarrd.room_designer.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class ModelService implements IModelService
@@ -36,8 +39,6 @@ public class ModelService implements IModelService
     private final IItemRepository itemRepository;
     private final IUserRepository userRepository;
     private final IItemDownloadRepository itemDownloadRepository;
-
-    private ArrayList<String> permissibleTypes = new ArrayList<>();
 
     @Autowired
     public ModelService(IStorageService storageService, StorageProperties storageProperties,
@@ -52,38 +53,34 @@ public class ModelService implements IModelService
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.itemDownloadRepository = itemDownloadRepository;
-
-        permissibleTypes.add("model/gltf+json");
     }
 
     /**
      * Handle storing model.
-     * @param file multipart file.
+     * @param files list of multipart files.
      * @param itemId ID of the item.
      * @param principal currently logged in user.
      */
     @Override
-    public void store(@RequestParam("file") MultipartFile file, Long itemId, Principal principal)
+    public void store(@RequestParam List<MultipartFile> files, Long itemId, Principal principal)
     {
-        //Check file type...
-        System.out.println("ImageService :: Uploading file type: " + file.getContentType());
-        boolean typeFound = false;
-        for (String permissibleType : permissibleTypes) {
-            if (permissibleType.equals(file.getContentType()))
-                typeFound = true;
-        }
-        if(!typeFound)
-            throw new StorageException("File is not an acceptable type: " + file.getOriginalFilename());
 
         if(modelRepository.findByItemId(itemId) != null)
             throw new StorageException("A Model already exists.");
 
+        if(files.size() < 2)
+            throw new StorageException("Missing files.");
+
         Long userId = userRepository.findByEmail(principal.getName()).getUserId();
-        storageService.store(file, userId, itemId,EnumSet.of(StorageTypeFlag.MODEL));
+        for(MultipartFile file : files)
+            storageService.store(file, userId, itemId,EnumSet.of(StorageTypeFlag.MODEL));
 
         //Insert new data into database.
-        String directory = ROOT_LOCATION + "\\" + userId + "\\" + MODEL + itemId + file.getOriginalFilename();
-        modelRepository.save(new Model(directory, itemRepository.getOne(itemId)));
+        Item item = itemRepository.getOne(itemId);
+        item.setHasModel(true);
+        String directory = ROOT_LOCATION + "\\" + userId + "\\" + itemId + "\\" + MODEL;
+        itemRepository.save(item);
+        modelRepository.save(new Model(directory, item));
     }
 
     /**
@@ -92,12 +89,27 @@ public class ModelService implements IModelService
      * @return Resource (the model).
      */
     @Override
-    public Resource serve(Long modelId)
+    public byte[] serve(Long modelId)
     {
         Model model = modelRepository.getOne(modelId);
-        System.out.println("ModelService :: Serving " + model.getModelDirectory());
+        System.out.println("ModelService :: Serving " + modelId);
         itemDownloadRepository.save(new ItemDownload(new Date(), modelRepository.getOne(modelId).getItem()));
-        return storageService.loadResource(model.getModelDirectory());
+
+        String[] pathNames = (new File(model.getDirectory())).list();
+        /*List<Resource> resources = new ArrayList<>();
+
+
+
+        if(pathNames != null)
+            for(String pathName : pathNames)
+                resources.add(storageService.loadResource(model.getDirectory()+"\\"+pathName));
+*/
+        try {
+            return storageService.loadMultipleResourcesInZip(pathNames, modelId.toString(), model.getDirectory());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -110,11 +122,16 @@ public class ModelService implements IModelService
     @Override
     public HttpStatus delete(Long modelId, Long itemId, Principal principal)
     {
-        User user = itemRepository.getOne(itemId).getUser();
+        Item item = itemRepository.getOne(itemId);
+        User user = item.getUser();
         if(!(user.getEmail()).equals(principal.getName()))
             return HttpStatus.UNAUTHORIZED;
 
-        storageService.delete(modelRepository.getOne(modelId).getModelDirectory());
+
+        storageService.delete(ROOT_LOCATION+"\\"+user.getUserId()+"\\"+itemId+"\\"+MODEL);
+
+        item.setHasModel(false);
+        itemRepository.save(item);
         modelRepository.delete(modelRepository.getOne(modelId));
         return HttpStatus.OK;
     }

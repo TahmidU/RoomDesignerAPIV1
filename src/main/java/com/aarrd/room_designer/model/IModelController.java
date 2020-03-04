@@ -9,11 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 public interface IModelController
 {
-    ResponseEntity<Resource> serverFile(@RequestParam Long modelId, Principal principal);
-    HttpStatus handleFileUpload(@RequestParam("file") MultipartFile file, Long modelId, Principal principal);
+    ResponseEntity<?> serverFile(@RequestParam Long modelId);
+    HttpStatus handleFileUpload(@RequestParam List<MultipartFile> files,@RequestParam Long itemId, Principal principal);
     HttpStatus handleDeletion(@RequestParam Long modelId, @RequestParam Long itemId, Principal principal);
     ResponseEntity<Long> relevantModel(@RequestParam Long itemId);
     ResponseEntity<Boolean> modelExists(@RequestParam Long itemId);
