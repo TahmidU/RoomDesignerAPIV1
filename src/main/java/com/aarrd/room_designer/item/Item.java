@@ -11,6 +11,7 @@ import com.aarrd.room_designer.model.Model;
 import com.aarrd.room_designer.user.User;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import org.hibernate.annotations.Cascade;
@@ -78,20 +79,17 @@ public class Item
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<Image> images;
 
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "downloadId")
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnore
     @OneToMany(mappedBy = "item", orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<ItemDownload> itemDownloads;
 
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "viewId")
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnore
     @OneToMany(mappedBy = "item", orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<ItemView> itemViews;
 
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "favouriteId")
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnore
     @OneToMany(mappedBy = "item", orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<Favourite> favourites;

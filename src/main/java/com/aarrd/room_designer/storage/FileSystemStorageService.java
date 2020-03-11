@@ -134,6 +134,14 @@ public class FileSystemStorageService implements IStorageService
         }
     }
 
+    /**
+     * Go To file directory, zip the contents and return the zip.
+     * @param pathNames content of path.
+     * @param zipName name of zip.
+     * @param directory directory.
+     * @return zip in byte array.
+     * @throws IOException
+     */
     @Override
     public byte[] loadMultipleResourcesInZip(String[] pathNames, String zipName, String directory) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -174,14 +182,6 @@ public class FileSystemStorageService implements IStorageService
             }
         }else
             throw new StorageException("Deletion failed. File "+path+" does not exist.");
-
-/*        if(Files.exists(filePath)) {
-            try {
-                Files.delete(Paths.get(path));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
 
     }
 }

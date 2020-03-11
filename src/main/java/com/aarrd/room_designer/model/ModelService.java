@@ -96,14 +96,6 @@ public class ModelService implements IModelService
         itemDownloadRepository.save(new ItemDownload(new Date(), modelRepository.getOne(modelId).getItem()));
 
         String[] pathNames = (new File(model.getDirectory())).list();
-        /*List<Resource> resources = new ArrayList<>();
-
-
-
-        if(pathNames != null)
-            for(String pathName : pathNames)
-                resources.add(storageService.loadResource(model.getDirectory()+"\\"+pathName));
-*/
         try {
             return storageService.loadMultipleResourcesInZip(pathNames, modelId.toString(), model.getDirectory());
         } catch (IOException e) {

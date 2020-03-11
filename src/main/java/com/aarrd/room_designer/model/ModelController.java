@@ -38,8 +38,6 @@ public class ModelController implements IModelController
     @Override
     public ResponseEntity<?> serverFile(@RequestParam Long modelId)
     {
-        //List<Resource> files = modelService.serve(modelId);
-        //return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(files);
         return new ResponseEntity<>(modelService.serve(modelId), HttpStatus.OK);
     }
 
