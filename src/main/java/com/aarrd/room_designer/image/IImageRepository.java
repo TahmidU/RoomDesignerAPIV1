@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public interface IImageRepository extends JpaRepository<Image, Long>
 {
-    @Query("SELECT i.imageId FROM Image i WHERE i.item.itemId = ?1")
-    List<Long> findImageIdByItemId(Long itemId);
+    @Query("SELECT i FROM Image i WHERE i.item.itemId = ?1")
+    List<Image> findImageByItemId(Long itemId);
 
     @Query("SELECT i.imageDirectory FROM Image i WHERE i.imageId = ?1")
     String findDirByImageId(Long imageId);

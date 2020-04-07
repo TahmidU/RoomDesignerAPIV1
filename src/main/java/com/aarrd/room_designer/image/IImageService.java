@@ -10,10 +10,9 @@ import java.util.List;
 
 public interface IImageService
 {
-    void storeImage(MultipartFile file, Boolean isThumbnail, Long itemId, Principal principal);
+    void storeImage(List<MultipartFile> files, Boolean isThumbnail, Long itemId, Principal principal);
     Resource serveImage(Long imageId);
     Resource serveThumbnail(Long itemId);
+    Long fetchThumbnailId(Long itemId);
     HttpStatus delete(Long imageId, Boolean isThumbnail, Long itemId, Principal principal);
-    List<Long> relevantImages(Long itemId);
-    Integer numberOfImages(Long itemId);
 }

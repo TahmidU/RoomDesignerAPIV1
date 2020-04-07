@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/password")
-public class PasswordTokenController implements IPasswordTokenController
+public class PasswordTokenController
 {
     private final IPasswordTokenService passwordTokenService;
 
@@ -25,7 +25,6 @@ public class PasswordTokenController implements IPasswordTokenController
      * @return
      */
     @PostMapping("/recovery")
-    @Override
     public HttpStatus sendEmail(@RequestParam String email)
     {
         passwordTokenService.sendEmail(email);
@@ -40,7 +39,6 @@ public class PasswordTokenController implements IPasswordTokenController
      * @return ResponseEntity containing string (if it was a success).
      */
     @PostMapping("/recovery/change")
-    @Override
     public ResponseEntity<String> changePassword(@RequestParam String email, @RequestParam int token,
                                                  @RequestParam String password)
     {

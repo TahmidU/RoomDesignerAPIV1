@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/item")
-public class ItemController implements IItemController
+public class ItemController
 {
     private final IItemService itemService;
 
@@ -28,12 +28,11 @@ public class ItemController implements IItemController
      * @return HttpStatus.
      */
     @PostMapping(value = "/add")
-    @Override
-    public HttpStatus addItem(@RequestBody Item item, Principal principal, @RequestParam String catName,
+    public ResponseEntity<?> addItem(@RequestBody Item item, Principal principal, @RequestParam String catName,
                               @RequestParam String typeName)
     {
-        itemService.addItem(item, principal, catName, typeName);
-        return HttpStatus.OK;
+        System.out.println("ItemController :: Item being added");
+        return itemService.addItem(item, principal, catName, typeName);
     }
 
     /**
@@ -42,7 +41,6 @@ public class ItemController implements IItemController
      * @return ResponseEntity.
      */
     @GetMapping(value = "/fetch")
-    @Override
     public ResponseEntity<?> fetchItem(@RequestParam Long itemId)
     {
         return new ResponseEntity<>(itemService.fetchItem(itemId), HttpStatus.OK);
@@ -50,49 +48,40 @@ public class ItemController implements IItemController
 
     /**
      * Fetch the users (using the userId) items.
-     * @param userId (request parameter) ID of the user.
      * @return ResponseEntity.
      */
-    @GetMapping(value = "/fetch/user-id")
-    @Override
-    public ResponseEntity<?> fetchItemsByUserId(@RequestParam Integer pageNum, @RequestParam String itemName,
-                                                @RequestParam Integer catId, @RequestParam Integer typeId,
-                                                @RequestParam Boolean hasModel, @RequestParam Long userId)
+    @GetMapping(value = "/fetch/my")
+    public ResponseEntity<?> fetchUsersItems(@RequestParam Integer pageNum, @RequestParam(required = false) String itemName,
+                                             @RequestParam(required = false) List<Integer> catIds,
+                                             @RequestParam(required = false) List<Integer> typeIds,
+                                             @RequestParam(required = false) Boolean hasModel, Principal principal)
     {
-        return new ResponseEntity<>(itemService.fetchUserItems(pageNum,
-                itemName, catId, typeId, hasModel, userId), HttpStatus.OK);
+        System.out.println("ItemController :: Principal Name: " + principal.getName());
+        return new ResponseEntity<>(itemService.fetchUserItems(principal, pageNum,
+                itemName, catIds, typeIds, hasModel), HttpStatus.OK);
     }
 
     /**
      * Fetch all items from the database. Paged to prevent retrieving all items at once.
      * @param pageNum (required parameter) page number.
      * @param itemName (request parameter optional) name of the item (does not have to be exact).
-     * @param catId  (request parameter optional) ID of the category.
-     * @param typeId  (request parameter optional) ID of the type.
+     * @param catIds  (request parameter optional) IDs of the category.
+     * @param typeIds  (request parameter optional) IDs of the type.
      * @param hasModel (request parameter optional) if the item has a model.
      * @return ResponseEntity containing Page of items.
      */
     @GetMapping(value = "/fetch-all")
-    @Override
     public ResponseEntity<?> fetchItems(@RequestParam Integer pageNum, @RequestParam (required = false) String itemName,
-                                        @RequestParam(required = false) Integer catId,
-                                        @RequestParam(required = false) Integer typeId,
+                                        @RequestParam(required = false) List<Integer> catIds,
+                                        @RequestParam(required = false) List<Integer> typeIds,
                                         @RequestParam(required = false) Boolean hasModel)
     {
-        return new ResponseEntity<>(itemService.fetchItems(pageNum, itemName, catId, typeId, hasModel),
+        if(catIds == null)
+            System.out.println("ItemController :: catIds is null.");
+        else
+            System.out.println("ItemController :: catIds is not null.");
+        return new ResponseEntity<>(itemService.fetchItems(pageNum, itemName, catIds, typeIds, hasModel),
                 HttpStatus.OK);
-    }
-
-    /**
-     * Fetch items by item variant id.
-     * @param itemId (request parameter) item variant ids
-     * @return ResponseEntity.
-     */
-    @GetMapping(value = "/fetch/variants")
-    @Override
-    public ResponseEntity<?> fetchItemVariant(@RequestParam Long itemId)
-    {
-        return new ResponseEntity<>(itemService.fetchItemVariants(itemId), HttpStatus.OK);
     }
 
     /**
@@ -100,42 +89,19 @@ public class ItemController implements IItemController
      * @param principal Currently logged in user.
      * @param pageNum (required parameter) page number.
      * @param itemName (request parameter optional) name of the item (does not have to be exact).
-     * @param catId  (request parameter optional) ID of the category.
-     * @param typeId  (request parameter optional) ID of the type.
+     * @param catIds  (request parameter optional) IDs of the category.
+     * @param typeIds  (request parameter optional) IDs of the type.
      * @param hasModel (request parameter optional) if the item has a model.
      * @return ResponseEntity containing Page of items.
      */
     @GetMapping(value = "/fetch/me")
-    @Override
     public ResponseEntity<?> fetchUserItems(Principal principal, @RequestParam Integer pageNum,
                                             @RequestParam(required = false) String itemName,
-                                            @RequestParam(required = false) Integer catId,
-                                            @RequestParam(required = false) Integer typeId,
+                                            @RequestParam(required = false) List<Integer> catIds,
+                                            @RequestParam(required = false) List<Integer> typeIds,
                                             @RequestParam(required = false) Boolean hasModel)
     {
-        return new ResponseEntity<>(itemService.fetchUserItems(principal, pageNum, itemName, catId, typeId, hasModel),
-                HttpStatus.OK);
-    }
-
-    /**
-     * Fetch all users favourited items.
-     * @param principal Currently logged in user.
-     * @param pageNum (required parameter) page number.
-     * @param itemName (request parameter optional) name of the item (does not have to be exact).
-     * @param catId  (request parameter optional) ID of the category.
-     * @param typeId  (request parameter optional) ID of the type.
-     * @param hasModel (request parameter optional) if the item has a model.
-     * @return ResponseEntity containing Page of items.
-     */
-    @GetMapping(value = "/fetch/favourites/me")
-    @Override
-    public ResponseEntity<?> fetchUserFavourites(Principal principal, @RequestParam Integer pageNum,
-                                                 @RequestParam(required = false) String itemName,
-                                                 @RequestParam(required = false) Integer catId,
-                                                 @RequestParam(required = false) Integer typeId,
-                                                 @RequestParam(required = false) Boolean hasModel)
-    {
-        return new ResponseEntity<>(itemService.fetchFavourites(principal, pageNum, itemName, catId, typeId, hasModel),
+        return new ResponseEntity<>(itemService.fetchUserItems(principal, pageNum, itemName, catIds, typeIds, hasModel),
                 HttpStatus.OK);
     }
 
@@ -145,7 +111,6 @@ public class ItemController implements IItemController
      * @return HttpStatus.
      */
     @DeleteMapping(value = "/remove")
-    @Override
     public HttpStatus removeItem(@RequestParam Long id)
     {
         itemService.removeItem(id);
@@ -158,10 +123,9 @@ public class ItemController implements IItemController
      * @return HttpStatus.
      */
     @PutMapping(value = "/update")
-    @Override
-    public HttpStatus modifyItem(@RequestBody Item modItem)
+    public HttpStatus modifyItem(@RequestBody Item modItem, String catName, String typeName)
     {
-        itemService.modifyItem(modItem);
+        itemService.modifyItem(modItem, catName, typeName);
         return HttpStatus.OK;
     }
 
@@ -172,7 +136,6 @@ public class ItemController implements IItemController
      * @return HttpStatus.
      */
     @PutMapping(value = "/update/cat")
-    @Override
     public HttpStatus changeCategory(@RequestParam Long itemId, @RequestParam String name)
     {
         itemService.changeCategory(itemId, name);
@@ -186,48 +149,9 @@ public class ItemController implements IItemController
      * @return HttpStatus.
      */
     @PutMapping(value = "/update/type")
-    @Override
     public HttpStatus changeType(@RequestParam Long itemId, @RequestParam String name)
     {
         itemService.changeType(itemId, name);
         return HttpStatus.OK;
-    }
-
-    /**
-     * Merge the variant id of the items.
-     * @param itemIds (request parameter) List of item IDs.
-     * @return HttpStatus.
-     */
-    @PutMapping(value = "/merge/variant")
-    @Override
-    public HttpStatus mergeVariants(@RequestParam List<Long> itemIds)
-    {
-        itemService.mergeVariants(itemIds);
-        return HttpStatus.OK;
-    }
-
-    /**
-     * Separate the variant id of the items.
-     * @param itemIds (request parameter) List of item IDs.
-     * @return HttpStatus.
-     */
-    @PutMapping(value = "/separate/variant")
-    @Override
-    public HttpStatus separateVariants(@RequestParam List<Long> itemIds)
-    {
-        itemService.separateVariants(itemIds);
-        return HttpStatus.OK;
-    }
-
-    /**
-     * Get the items variant Id.
-     * @param itemId (request parameter) ID of the item.
-     * @return ResponseEntity containing long.
-     */
-    @GetMapping(value = "/variant-id")
-    @Override
-    public ResponseEntity<Long> getVariantId(@RequestParam Long itemId)
-    {
-        return new ResponseEntity<>(itemService.getVariantId(itemId), HttpStatus.OK);
     }
 }

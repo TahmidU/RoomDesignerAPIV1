@@ -29,6 +29,7 @@ public class FileSystemStorageService implements IStorageService
     private final Path ROOT_LOCATION;
     private final String IMAGE;
     private final String MODEL;
+    private final String THUMBNAIL;
     
     @Autowired
     public FileSystemStorageService(StorageProperties properties)
@@ -36,6 +37,7 @@ public class FileSystemStorageService implements IStorageService
         this.ROOT_LOCATION = Paths.get(properties.getROOT_LOCATION());
         this.IMAGE = properties.getIMAGE();
         this.MODEL = properties.getMODEL();
+        this.THUMBNAIL = properties.getTHUMBNAIL();
     }
 
     /**
@@ -70,6 +72,8 @@ public class FileSystemStorageService implements IStorageService
             location = location + "\\" + IMAGE;
         else if(flags.contains(StorageTypeFlag.MODEL))
             location = location + "\\" + MODEL;
+        else if(flags.contains(StorageTypeFlag.THUMBNAIL))
+            location = location + "\\" + THUMBNAIL;
 
         else
             throw new StorageException("Failed to store file. Problem naming the file. " + file.getOriginalFilename());

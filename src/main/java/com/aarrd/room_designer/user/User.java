@@ -1,6 +1,5 @@
 package com.aarrd.room_designer.user;
 
-import com.aarrd.room_designer.favourite.Favourite;
 import com.aarrd.room_designer.item.Item;
 import com.aarrd.room_designer.user.security.password.PasswordToken;
 import com.aarrd.room_designer.user.security.vertification.VerificationToken;
@@ -9,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -59,12 +57,6 @@ public class User
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<Item> items;
-
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "favouriteId")
-    @JsonIdentityReference(alwaysAsId = true)
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
-    private List<Favourite> favourites;
 
     public User() {
     }

@@ -1,12 +1,10 @@
 package com.aarrd.room_designer.item;
 
-import com.aarrd.room_designer.favourite.Favourite;
 import com.aarrd.room_designer.image.Image;
 import com.aarrd.room_designer.item.category.Category;
 import com.aarrd.room_designer.item.statistic.download.ItemDownload;
 import com.aarrd.room_designer.item.statistic.view.ItemView;
 import com.aarrd.room_designer.item.type.Type;
-import com.aarrd.room_designer.item.variant.ItemVariant;
 import com.aarrd.room_designer.model.Model;
 import com.aarrd.room_designer.user.User;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -61,12 +59,6 @@ public class Item
     @JoinColumn(name = "cat_id", nullable = false)
     private Category category;
 
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "variantId")
-    @JsonIdentityReference(alwaysAsId = true)
-    @ManyToOne
-    @JoinColumn(name = "variant_id", nullable = false)
-    private ItemVariant itemVariant;
-
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "typeId")
     @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
@@ -89,11 +81,6 @@ public class Item
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private List<ItemView> itemViews;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "item", orphanRemoval = true)
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
-    private List<Favourite> favourites;
-
     public Item(){}
 
     public Item(String name, String description, Date date, Boolean hasModel)
@@ -112,8 +99,7 @@ public class Item
         this.hasModel = hasModel;
     }
 
-    public Item(String name, String description, Date date, Boolean hasModel, User user, Category category,
-                ItemVariant itemVariant, Type type)
+    public Item(String name, String description, Date date, Boolean hasModel, User user, Category category, Type type)
     {
         this.name = name;
         this.description = description;
@@ -121,7 +107,6 @@ public class Item
         this.hasModel = hasModel;
         this.user = user;
         this.category = category;
-        this.itemVariant = itemVariant;
         this.type = type;
     }
 }

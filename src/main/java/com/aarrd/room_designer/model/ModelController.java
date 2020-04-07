@@ -1,24 +1,16 @@
 package com.aarrd.room_designer.model;
 
-import com.aarrd.room_designer.storage.StorageFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.security.Principal;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping(value = "/model")
-public class ModelController implements IModelController
+public class ModelController
 {
     private final ModelService modelService;
 
@@ -35,7 +27,6 @@ public class ModelController implements IModelController
      */
     @GetMapping(value = "/fetch", produces = "application/zip")
     @ResponseBody
-    @Override
     public ResponseEntity<?> serverFile(@RequestParam Long modelId)
     {
         return new ResponseEntity<>(modelService.serve(modelId), HttpStatus.OK);
@@ -49,8 +40,7 @@ public class ModelController implements IModelController
      * @return HttpStatus.
      */
     @PostMapping("/upload")
-    @Override
-    public HttpStatus handleFileUpload(@RequestParam List<MultipartFile> files, @RequestParam Long itemId,
+    public HttpStatus handleFileUpload(@RequestParam("file") List<MultipartFile> files, @RequestParam Long itemId,
                                        Principal principal)
     {
         modelService.store(files, itemId, principal);
@@ -65,7 +55,6 @@ public class ModelController implements IModelController
      * @return HttpStatus.
      */
     @DeleteMapping("/remove")
-    @Override
     public HttpStatus handleDeletion(@RequestParam Long modelId, @RequestParam Long itemId, Principal principal)
     {
         return modelService.delete(modelId, itemId, principal);
@@ -77,7 +66,6 @@ public class ModelController implements IModelController
      * @return ResponseEntity containing long (id of the model).
      */
     @GetMapping("/relevant")
-    @Override
     public ResponseEntity<Long> relevantModel(@RequestParam Long itemId)
     {
         return new ResponseEntity<>(modelService.relevantModel(itemId), HttpStatus.OK);
@@ -89,15 +77,8 @@ public class ModelController implements IModelController
      * @return ResponseEntity containg a boolean.
      */
     @GetMapping("/exists")
-    @Override
     public ResponseEntity<Boolean> modelExists(Long itemId)
     {
         return new ResponseEntity<>(modelService.modelExists(itemId), HttpStatus.OK);
-    }
-
-    @ExceptionHandler(StorageFileNotFoundException.class)
-    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc)
-    {
-        return ResponseEntity.notFound().build();
     }
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
-public class UserController implements IUserController
+public class UserController
 {
     private final IUserService userService;
 
@@ -27,7 +27,6 @@ public class UserController implements IUserController
      * @return ResponseEntity containing user.
      */
     @GetMapping(value = "/me")
-    @Override
     public ResponseEntity<?> userDetails(Principal principal)
     {
         return userService.userDetails(principal);
@@ -36,40 +35,34 @@ public class UserController implements IUserController
     /**
      * Change user details.
      * @param principal (request parameter) currently logged in user.
-     * @param firstName (request parameter) new first name of the user.
-     * @param lastName (request parameter) new last name of the user.
-     * @param password (request parameter) new password of the user.
-     * @param phoneNum (request parameter) new phone number of the user.
      * @return HttpStatus.
      */
     @PutMapping(value = "/change-details", produces = "application/json")
-    @Override
-    public HttpStatus changeDetails(Principal principal, @RequestParam(required = false) String firstName,
-                                    @RequestParam(required = false) String lastName,
-                                    @RequestParam(required = false) String password,
-                                    @RequestParam(required = false) String phoneNum)
+    public HttpStatus changeDetails(Principal principal, @RequestBody Map<String, Object> user)
     {
-        return userService.changeDetails(principal, firstName, lastName, password, phoneNum);
+        return userService.changeDetails(principal, user);
     }
 
     /**
      * Authenticate user.
-     * @param email (request parameter) email of the user.
-     * @param password (request parameter) password of the user.
      * @return ResponseEntity containing String.
-     * @throws IOException
      */
-    @GetMapping(value = "/authenticate")
-    @Override
-    public ResponseEntity<?> authenticateUser(@RequestParam String email, @RequestParam String password) throws IOException
+    @PostMapping(value = "/authenticate")
+    public ResponseEntity<?> authenticateUser(@RequestBody Map<String, Object> login)
     {
-        return userService.authenticateUser(email, password);
+        return userService.authenticateUser(login);
     }
 
     @GetMapping(value = "/details", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> retrieveUserDetails(@RequestParam Long userId)
+    public ResponseEntity<?> retrieveUserDetails(@RequestParam Long userId, Principal principal)
     {
-        return userService.retrieveUserDetails(userId);
+        return userService.retrieveUserDetails(userId, principal);
+    }
+
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity<?> deleteUser(Principal principal)
+    {
+        return userService.deleteUser(principal);
     }
 }

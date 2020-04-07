@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/item-download")
-public class ItemDownloadController implements IItemDownloadController
+public class ItemDownloadController
 {
     private final IItemDownloadService itemDownloadService;
 
@@ -23,8 +23,7 @@ public class ItemDownloadController implements IItemDownloadController
      * @return ResponseEntity containing an integer.
      */
     @GetMapping(value = "/aggregate")
-    @Override
-    public ResponseEntity<Integer> getViews(@RequestParam Long itemId)
+    public ResponseEntity<Integer> getDownloads(@RequestParam Long itemId)
     {
         return new ResponseEntity<>(itemDownloadService.getDownloadsAggregate(itemId), HttpStatus.OK);
     }

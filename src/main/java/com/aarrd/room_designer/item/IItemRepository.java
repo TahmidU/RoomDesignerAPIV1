@@ -15,10 +15,4 @@ public interface IItemRepository extends JpaRepository<Item, Long>
 {
     @Query("FROM Item i WHERE i.itemId = ?1")
     Item findByItemId(Long itemId);
-
-    @Query("FROM Item i WHERE i.itemVariant.variantId = ?1")
-    List<Item> findByVariantId(Long variantId);
-
-    @Query("FROM Item i WHERE i.itemId = ?1")
-    Long findVariantIdByItemId(Long itemId);
 }

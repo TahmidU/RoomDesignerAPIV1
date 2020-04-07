@@ -1,18 +1,14 @@
 package com.aarrd.room_designer.user;
 
-import com.aarrd.room_designer.user.security.sign_up.UserLoginDetail;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -42,27 +38,28 @@ public class UserService implements IUserService
     /**
      * Change user details.
      * @param principal currently logged in user.
-     * @param firstName new first name of the user.
-     * @param lastName new last name of the user.
-     * @param password new password of the user.
-     * @param phoneNum new phone number of the user.
      * @return HttpStatus.
      */
-    public HttpStatus changeDetails(Principal principal, String firstName, String lastName, String password, String phoneNum)
+    public HttpStatus changeDetails(Principal principal, Map<String, Object> user)
     {
-        User user = userRepository.findByEmail(principal.getName());
-        if (user != null)
-        {
-            if(firstName != null)
-                user.setFirstName(firstName);
-            if(lastName != null)
-                user.setLastName(lastName);
-            if(password != null)
-                user.setPassword(bCryptPasswordEncoder.encode(password));
-            if(password != null)
-                user.setPhoneNum(phoneNum);
+        User retrievedUser = userRepository.findByEmail(principal.getName());
+        String firstName = (String) user.get("firstName");
+        String lastName = (String) user.get("lastName");
+        String password = (String) user.get("password");
+        String phoneNum = (String) user.get("phoneNum");
 
-            userRepository.save(user);
+        if (retrievedUser != null)
+        {
+            if(firstName != null && !firstName.equals(""))
+                retrievedUser.setFirstName(firstName);
+            if(lastName != null && !lastName.equals(""))
+                retrievedUser.setLastName(lastName);
+            if(password != null && !password.equals(""))
+                retrievedUser.setPassword(bCryptPasswordEncoder.encode(password));
+            if(phoneNum != null && phoneNum.equals(""))
+                retrievedUser.setPhoneNum(phoneNum);
+
+            userRepository.save(retrievedUser);
             return HttpStatus.OK;
         }
         return HttpStatus.CONFLICT;
@@ -70,14 +67,14 @@ public class UserService implements IUserService
 
     /**
      * Authenticate user.
-     * @param email email of the user.
-     * @param password password of the user.
      * @return ResponseEntity containing String.
-     * @throws IOException
      */
     @Override
-    public ResponseEntity<?> authenticateUser(String email, String password) throws IOException
+    public ResponseEntity<?> authenticateUser(Map<String,Object> login)
     {
+        String email = (String) login.get("email");
+        String password = (String) login.get("password");
+
         User user = userRepository.findByEmail(email);
         if(user != null)
         {
@@ -94,9 +91,13 @@ public class UserService implements IUserService
     }
 
     @Override
-    public ResponseEntity<?> retrieveUserDetails(Long userId)
+    public ResponseEntity<?> retrieveUserDetails(Long userId, Principal principal)
     {
-        Optional<User> user = userRepository.findById(userId);
+        Optional<User> user;
+        if(!userId.equals((long)-1))
+            user = userRepository.findById(userId);
+        else
+            user = Optional.of(userRepository.findByEmail(principal.getName()));
         if(user.isPresent())
         {
             JSONObject jsonObject = new JSONObject();
@@ -110,5 +111,19 @@ public class UserService implements IUserService
             return new ResponseEntity<>(jsonObject.toJSONString(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteUser(Principal principal)
+    {
+        User user = userRepository.findByEmail(principal.getName());
+
+        if(user != null)
+        {
+            userRepository.delete(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }

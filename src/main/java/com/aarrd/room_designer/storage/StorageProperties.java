@@ -10,4 +10,5 @@ public class StorageProperties
     private String ROOT_LOCATION = "data";
     private String IMAGE = "images\\";
     private String MODEL = "models\\";
+    private String THUMBNAIL = "thumbnail\\";
 }

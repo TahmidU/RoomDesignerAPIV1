@@ -11,7 +11,7 @@ import java.util.Calendar;
 
 @RestController
 @RequestMapping("/sign-up")
-public class SignUpController implements ISignUpController
+public class SignUpController
 {
     private final ISignUpService signUpService;
 
@@ -29,7 +29,6 @@ public class SignUpController implements ISignUpController
      * @param phoneNum (request parameter) phone number of the user.
      */
     @PostMapping("/v1")
-    @Override
     public HttpStatus signUp(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String password,
                              @RequestParam String email, @RequestParam String phoneNum)
     {
@@ -46,7 +45,6 @@ public class SignUpController implements ISignUpController
      * @throws TokenExpiredException
      */
     @PostMapping("/confirmation")
-    @Override
     public ResponseEntity<?> confirmAccount(@RequestParam int token, @RequestParam String email) throws TokenDoesNotExistException, TokenExpiredException
     {
         return signUpService.confirmation(token, email);
@@ -57,7 +55,6 @@ public class SignUpController implements ISignUpController
      * @param email (request parameter) email of the user.
      */
     @PostMapping("/resend-token")
-    @Override
     public HttpStatus resendVerificationToken(@RequestParam String email)
     {
         signUpService.resendVerificationToken(email);

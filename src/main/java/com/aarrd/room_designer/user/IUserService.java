@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Map;
 
 public interface IUserService
 {
     ResponseEntity<?> userDetails(Principal principal);
-    HttpStatus changeDetails(Principal principal, String firstName, String lastName, String password, String phoneNum);
-    ResponseEntity<?> authenticateUser(String email, String password) throws IOException;
-    ResponseEntity<?> retrieveUserDetails(Long userId);
+    HttpStatus changeDetails(Principal principal, Map<String,Object> user);
+    ResponseEntity<?> authenticateUser(Map<String,Object> login);
+    ResponseEntity<?> retrieveUserDetails(Long userId, Principal principal);
+    ResponseEntity<?> deleteUser(Principal principal);
 }
