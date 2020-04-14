@@ -1,5 +1,6 @@
 package com.aarrd.room_designer.user.security.vertification.registration;
 
+import com.aarrd.room_designer.AppConfig;
 import com.aarrd.room_designer.user.User;
 import com.aarrd.room_designer.user.security.vertification.IVerificationTokenRepository;
 import com.aarrd.room_designer.user.security.vertification.VerificationToken;
@@ -62,7 +63,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         String message = String.valueOf(token);
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("Tahmiduddin@hotmail.co.uk");
+        simpleMailMessage.setFrom(AppConfig.EMAIL);
         simpleMailMessage.setTo(email);
         simpleMailMessage.setSubject(subject);
         simpleMailMessage.setText(message);

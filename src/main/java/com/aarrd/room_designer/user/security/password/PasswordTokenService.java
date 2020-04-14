@@ -40,6 +40,10 @@ public class PasswordTokenService implements IPasswordTokenService
     public void sendEmail(String email)
     {
         User user = userRepository.findByEmail(email);
+        PasswordToken passwordToken = passwordTokenRepository.findByUserId(user.getUserId());
+        if(passwordToken != null)
+            passwordTokenRepository.delete(passwordToken);
+
         applicationEventPublisher.publishEvent(new TokenEvent(user));
     }
 

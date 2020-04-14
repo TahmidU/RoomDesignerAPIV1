@@ -1,5 +1,6 @@
 package com.aarrd.room_designer.user.security.password.token_production;
 
+import com.aarrd.room_designer.AppConfig;
 import com.aarrd.room_designer.user.User;
 import com.aarrd.room_designer.user.security.password.IPasswordTokenRepository;
 import com.aarrd.room_designer.user.security.password.PasswordToken;
@@ -64,7 +65,7 @@ public class TokenListener implements ApplicationListener<TokenEvent>
         String message = String.valueOf(token);
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("Tahmiduddin@hotmail.co.uk");
+        simpleMailMessage.setFrom(AppConfig.EMAIL);
         simpleMailMessage.setTo(email);
         simpleMailMessage.setSubject(subject);
         simpleMailMessage.setText(message);
