@@ -60,13 +60,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      * @param response http response.
      * @param chain filter.
      * @param authResult authentication result.
-     * @throws IOException
-     * @throws ServletException
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authResult)
-            throws IOException, ServletException
     {
         UserLoginDetail user =
                 (UserLoginDetail) authResult.getPrincipal();

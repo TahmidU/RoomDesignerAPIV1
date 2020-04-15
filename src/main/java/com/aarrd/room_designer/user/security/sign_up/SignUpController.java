@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Calendar;
 
 @RestController
-@RequestMapping("/sign-up")
+@RequestMapping("/api/sign-up")
 public class SignUpController
 {
     private final ISignUpService signUpService;

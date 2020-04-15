@@ -8,7 +8,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/item")
+@RequestMapping(value = "/api/item")
 public class ItemController
 {
     private final IItemService itemService;

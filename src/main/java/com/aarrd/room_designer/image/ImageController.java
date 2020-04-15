@@ -14,7 +14,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/image")
+@RequestMapping(value = "/api/image")
 public class ImageController
 {
     private final ImageService imageService;

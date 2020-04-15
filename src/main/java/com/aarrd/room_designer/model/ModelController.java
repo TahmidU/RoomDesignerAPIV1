@@ -9,7 +9,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/model")
+@RequestMapping(value = "/api/model")
 public class ModelController
 {
     private final ModelService modelService;

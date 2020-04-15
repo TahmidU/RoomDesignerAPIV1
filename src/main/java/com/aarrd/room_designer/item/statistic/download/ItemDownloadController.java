@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/item-download")
+@RequestMapping(value = "/api/item-download")
 public class ItemDownloadController
 {
     private final IItemDownloadService itemDownloadService;
