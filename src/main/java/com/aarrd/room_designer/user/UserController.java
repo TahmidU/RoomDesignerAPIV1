@@ -1,6 +1,7 @@
 package com.aarrd.room_designer.user;
 
 import com.aarrd.room_designer.user.security.sign_up.UserLoginDetail;
+import com.aarrd.room_designer.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import java.security.Principal;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController
 {
     private final IUserService userService;
@@ -50,12 +51,13 @@ public class UserController
     @PostMapping(value = "/authenticate")
     public ResponseEntity<?> authenticateUser(@RequestBody Map<String, Object> login)
     {
+        Log.printMsg(this.getClass(), "Blah!");
         return userService.authenticateUser(login);
     }
 
-    @GetMapping(value = "/details", produces = "application/json")
+    @GetMapping(value = "/{userId}/details", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> retrieveUserDetails(@RequestParam Long userId, Principal principal)
+    public ResponseEntity<?> retrieveUserDetails(@PathVariable(name = "userId") Long userId, Principal principal)
     {
         return userService.retrieveUserDetails(userId, principal);
     }

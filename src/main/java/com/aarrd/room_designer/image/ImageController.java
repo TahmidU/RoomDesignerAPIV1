@@ -1,6 +1,7 @@
 package com.aarrd.room_designer.image;
 
 import com.aarrd.room_designer.storage.StorageFileNotFoundException;
+import com.aarrd.room_designer.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
@@ -14,7 +15,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/image")
+@RequestMapping(value = "/api/images")
 public class ImageController
 {
     private final ImageService imageService;
@@ -29,10 +30,11 @@ public class ImageController
      * @param imageId (request parameter) ID of the items images are retrieved.
      * @return ResponseEntity containing the Resource (the image).
      */
-    @GetMapping("/fetch-image")
+    @GetMapping("/{imageId}/download")
     @ResponseBody
-    public ResponseEntity<?> serveImage(@RequestParam Long imageId)
+    public ResponseEntity<?> serveImage(@PathVariable(name = "imageId") Long imageId)
     {
+        Log.printMsg(this.getClass(), "Send Image: " + imageId);
         Resource files = imageService.serveImage(imageId);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(files);
     }
@@ -42,10 +44,11 @@ public class ImageController
      * @param itemId (request parameter) ID of the item for the thumbnail.
      * @return ResponseEntity containing the Resource (the image).
      */
-    @GetMapping("/fetch-thumbnail")
+    @GetMapping("/thumbnail/download")
     @ResponseBody
     public ResponseEntity<?> serveThumbnail(@RequestParam Long itemId)
     {
+        Log.printMsg(this.getClass(), "Send Thumbnail of itemId: " + itemId);
         Resource file = imageService.serveThumbnail(itemId);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION).body(file);
     }
@@ -55,9 +58,10 @@ public class ImageController
      * @param itemId (request parameter) ID of the item for the thumbnail.
      * @return
      */
-    @GetMapping("/fetch-thumbnail-id")
+    @GetMapping("/thumbnail-id")
     public ResponseEntity<?> fetchThumbnailId(@RequestParam Long itemId)
     {
+        Log.printMsg(this.getClass(), "Fetching Thumbnail ID with itemId: " + itemId);
         return new ResponseEntity<>(imageService.fetchThumbnailId(itemId), HttpStatus.OK);
     }
 
@@ -73,7 +77,8 @@ public class ImageController
     public HttpStatus handleImageUpload(@RequestParam("file") List<MultipartFile> files, @RequestParam Long itemId,
                                         @RequestParam Boolean isThumbnail, Principal principal)
     {
-        imageService.storeImage(files, isThumbnail, itemId,principal);
+        Log.printMsg(this.getClass(), "Upload Image. Associated Item: " + itemId);
+        imageService.storeImage(files, isThumbnail, itemId, principal);
         return HttpStatus.CREATED;
     }
 
@@ -85,10 +90,11 @@ public class ImageController
      * @param principal currently logged in user.
      * @return HttpStatus
      */
-    @DeleteMapping("/delete")
-    public HttpStatus handleDeletion(@RequestParam Long imageId, @RequestParam Boolean isThumbnail,
+    @DeleteMapping("/{imageId}")
+    public HttpStatus handleDeletion(@PathVariable(name = "imageId") Long imageId, @RequestParam Boolean isThumbnail,
                                      @RequestParam Long itemId, Principal principal)
     {
+        Log.printMsg(this.getClass(), "Delete image: " + imageId);
         return imageService.delete(imageId, isThumbnail, itemId, principal);
     }
 

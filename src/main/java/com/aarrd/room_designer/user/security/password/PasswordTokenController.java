@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/api/password")
+@RequestMapping(value = "/api/passwords")
 public class PasswordTokenController
 {
     private final IPasswordTokenService passwordTokenService;

@@ -1,5 +1,6 @@
 package com.aarrd.room_designer.model;
 
+import com.aarrd.room_designer.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/model")
+@RequestMapping(value = "/api/models")
 public class ModelController
 {
     private final ModelService modelService;
@@ -25,10 +26,11 @@ public class ModelController
      * @param modelId (request parameter) ID of the model.
      * @return ResponseEntity containing resource.
      */
-    @GetMapping(value = "/fetch", produces = "application/zip")
+    @GetMapping(value = "/{modelId}/download", produces = "application/zip")
     @ResponseBody
-    public ResponseEntity<?> serverFile(@RequestParam Long modelId)
+    public ResponseEntity<?> serverFile(@PathVariable(name = "modelId") Long modelId)
     {
+        Log.printMsg(this.getClass(), "Sending model: " + modelId);
         return new ResponseEntity<>(modelService.serve(modelId), HttpStatus.OK);
     }
 
@@ -43,6 +45,7 @@ public class ModelController
     public HttpStatus handleFileUpload(@RequestParam("file") List<MultipartFile> files, @RequestParam Long itemId,
                                        Principal principal)
     {
+        Log.printMsg(this.getClass(), "Upload Model. Associate with: " + itemId);
         modelService.store(files, itemId, principal);
         return HttpStatus.CREATED;
     }
@@ -54,31 +57,10 @@ public class ModelController
      * @param principal currently logged in user.
      * @return HttpStatus.
      */
-    @DeleteMapping("/remove")
-    public HttpStatus handleDeletion(@RequestParam Long modelId, @RequestParam Long itemId, Principal principal)
+    @DeleteMapping("/{modelId}")
+    public HttpStatus handleDeletion(@PathVariable(name = "modelId") Long modelId, @RequestParam Long itemId, Principal principal)
     {
+        Log.printMsg(this.getClass(), "Delete Model: " + modelId);
         return modelService.delete(modelId, itemId, principal);
-    }
-
-    /**
-     * Retrieve the model associated with the item.
-     * @param itemId (request parameter) ID of the item.
-     * @return ResponseEntity containing long (id of the model).
-     */
-    @GetMapping("/relevant")
-    public ResponseEntity<Long> relevantModel(@RequestParam Long itemId)
-    {
-        return new ResponseEntity<>(modelService.relevantModel(itemId), HttpStatus.OK);
-    }
-
-    /**
-     * Check if model exists for the given item.
-     * @param itemId (request parameter) ID of the item.
-     * @return ResponseEntity containg a boolean.
-     */
-    @GetMapping("/exists")
-    public ResponseEntity<Boolean> modelExists(Long itemId)
-    {
-        return new ResponseEntity<>(modelService.modelExists(itemId), HttpStatus.OK);
     }
 }

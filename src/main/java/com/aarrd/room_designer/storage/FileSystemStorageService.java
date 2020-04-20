@@ -1,6 +1,7 @@
 package com.aarrd.room_designer.storage;
 
 import com.aarrd.room_designer.user.UserService;
+import com.aarrd.room_designer.util.Log;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -47,8 +48,12 @@ public class FileSystemStorageService implements IStorageService
     public void init() {
         try
         {
-            if(!Files.exists(ROOT_LOCATION))
+            if(!Files.exists(ROOT_LOCATION)) {
+                Log.printMsg(this.getClass(), "Creating new data directory...");
                 Files.createDirectory(ROOT_LOCATION);
+                Log.printMsg(this.getClass(), "New data directory created!");
+            }else
+                Log.printMsg(this.getClass(), "Directory exists already.");
         }catch (IOException e)
         {
             throw new StorageException("Could not initialize storage, ", e);
@@ -79,7 +84,7 @@ public class FileSystemStorageService implements IStorageService
             throw new StorageException("Failed to store file. Problem naming the file. " + file.getOriginalFilename());
 
         Path locationPath = Paths.get(location);
-        System.out.println(location);
+        Log.printMsg(this.getClass(), "Storing file at: " + locationPath);
 
         try
         {
@@ -90,7 +95,6 @@ public class FileSystemStorageService implements IStorageService
             {
                 Files.createDirectories(locationPath);
             }
-            System.out.println(file.getContentType());
             Files.copy(file.getInputStream(), locationPath.resolve(file.getOriginalFilename()));
         }catch (IOException e)
         {
@@ -107,6 +111,7 @@ public class FileSystemStorageService implements IStorageService
     {
         try
         {
+            Log.printMsg(this.getClass(), "Loading All files...");
             return Files.walk(ROOT_LOCATION, 1)
                     .filter(path -> !path.equals(ROOT_LOCATION))
                     .map(ROOT_LOCATION::relativize);
@@ -125,6 +130,7 @@ public class FileSystemStorageService implements IStorageService
     public Resource loadResource(String filename) {
         try
         {
+            Log.printMsg(this.getClass(), "Fetch resource from storage: " + filename);
             Path file = Paths.get(filename);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable())
@@ -148,6 +154,9 @@ public class FileSystemStorageService implements IStorageService
      */
     @Override
     public byte[] loadMultipleResourcesInZip(String[] pathNames, String zipName, String directory) throws IOException {
+
+        Log.printMsg(this.getClass(), "Retriving from storage and zipping: " + directory);
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
 
@@ -176,6 +185,7 @@ public class FileSystemStorageService implements IStorageService
     @Override
     public void delete(String path)
     {
+        Log.printMsg(this.getClass(), "Delete file path: " + path);
         Path filePath = Paths.get(path);
         if(Files.exists(filePath))
         {
