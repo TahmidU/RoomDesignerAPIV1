@@ -128,24 +128,4 @@ public class ModelService implements IModelService
         return HttpStatus.OK;
     }
 
-    /**
-     * Find the id of the model for a given item.
-     * @param itemId ID of the item.
-     * @return Long (id of the model).
-     */
-    @Override
-    public Long relevantModel(Long itemId)
-    {
-        return modelRepository.findByItemId(itemId).getModelId();
-    }
-
-    /**
-     * Check if a model exists for a given model.
-     * @param itemId ID of the item.
-     * @return Boolean.
-     */
-    @Override
-    public Boolean modelExists(Long itemId) {
-        return modelRepository.findByItemId(itemId) != null;
-    }
 }

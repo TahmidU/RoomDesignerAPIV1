@@ -2,14 +2,12 @@ package com.aarrd.room_designer.user.security.login;
 
 import com.aarrd.room_designer.user.User;
 import com.aarrd.room_designer.user.IUserRepository;
-import com.aarrd.room_designer.user.security.sign_up.UserLoginDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 
 @Service

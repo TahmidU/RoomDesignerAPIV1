@@ -1,12 +1,11 @@
 package com.aarrd.room_designer.user;
 
-import com.aarrd.room_designer.user.security.sign_up.UserLoginDetail;
 import com.aarrd.room_designer.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
+
 import java.security.Principal;
 import java.util.Map;
 

@@ -13,10 +13,10 @@ import java.util.List;
 @RequestMapping(value = "/api/models")
 public class ModelController
 {
-    private final ModelService modelService;
+    private final IModelService modelService;
 
     @Autowired
-    public ModelController(ModelService modelService)
+    public ModelController(IModelService modelService)
     {
         this.modelService = modelService;
     }

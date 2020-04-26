@@ -1,4 +1,4 @@
-package com.aarrd.room_designer.user.security.sign_up;
+package com.aarrd.room_designer.user.security.login;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

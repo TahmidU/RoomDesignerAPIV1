@@ -16,6 +16,4 @@ public interface IModelService
     void store(@RequestParam List<MultipartFile> file, Long itemId, Principal principal);
     byte[] serve(Long modelId);
     HttpStatus delete(Long modelId, Long itemId, Principal principal);
-    Long relevantModel(Long itemId);
-    Boolean modelExists(Long itemId);
 }
