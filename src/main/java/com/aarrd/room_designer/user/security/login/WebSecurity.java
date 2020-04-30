@@ -32,7 +32,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers(SIGN_UP_URL).permitAll()
-                .antMatchers("/api/users/authenticate").permitAll()
                 .antMatchers("/api/sign-up/**").permitAll()
                 .antMatchers("/api/passwords/**").permitAll()
                 .anyRequest().authenticated()
